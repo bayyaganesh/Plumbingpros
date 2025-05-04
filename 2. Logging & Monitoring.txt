@@ -1,0 +1,72 @@
+2. Logging & Monitoring
+Goal: record every run’s payload so you can spot prompt drift or spikes.
+
+After your Merge node (where Webhook + Image paths converge), add an HTTP Request node.
+
+Configure it to POST to your logging endpoint (or a Google-Sheets “webhook” URL).
+
+Under Body Parameters choose JSON/RAW and enter:
+
+bash
+Copy
+Edit
+={{ $json }}  
+In Settings → Retry On Failure, set Max Retries: 3, Retry Delay: 5s.
+
+In Settings → Timeout, set 10 000 ms.
+
+Wire its always output into the rest of your flow (so logging never blocks).
+
+3. Timeouts & Retries
+Goal: ensure no single external call hangs forever.
+
+For each node that does an HTTP/API call (Webhook triggers, OpenAI, any other HTTP Request):
+
+Click the node → Settings tab.
+
+Enable Retry On Failure, set Max Retries: 2, Retry Delay: 5 s.
+
+Under Timeout, enter 10 000 ms.
+
+Save.
+
+4. Standardized Response Envelope
+Goal: your frontend always gets the same JSON shape, regardless of branch.
+
+Remove any branch-specific “Respond to Webhook” nodes.
+
+At the very end of your flow (after your intent logic, emergency vs quote vs smalltalk) add one Respond to Webhook.
+
+In that node’s Response Body enter Custom JSON (toggle off “Include Other Fields”):
+
+json
+Copy
+Edit
+{
+  "status": "ok",
+  "intent": "={{ $json.IntentName }}",
+  "problemType": "={{ $json.problemType || null }}",
+  "urgency": {{ $json.urgency || null }},
+  "message": "={{ $json.userMessage || $json.fallbackMessage }}"
+}
+Wire all your final branches into this one node.
+
+5. Security & Deployment
+Goal: lock down your webhook and go live.
+
+In Webhook1 switch from Test URL → Production URL.
+
+Under Options → Allowed Origins (CORS), enter your exact frontend origin(s):
+
+json
+Copy
+Edit
+{ "Access-Control-Allow-Origin": "https://your.frontend.domain" }
+Click Add Option → IP(s) Whitelist and list your server IP(s) or CIDR.
+
+Click Add Option → Authentication and choose API Key (or Basic Auth).
+
+Copy the credentials into your frontend so only your app can hit the URL.
+
+Activate the workflow.
+

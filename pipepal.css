@@ -1,0 +1,83 @@
+/* CHAT WIDGET CONTAINER */
+/* pipepal.css */
+
+/* Container & toggle */
+#pipepal-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+#pipepal-toggle {
+  background: #004080; color: #fff; padding: 12px 20px; border-radius: 24px;
+  cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+#pipepal-toggle:hover { background: #0066cc; }
+
+/* Chat box */
+#pipepal-chat {
+  position: absolute; bottom: 70px; right: 0;
+  width: 350px; height: 600px; max-height: 90vh;
+  background: #fff; border: 1px solid #ddd; border-radius: 12px;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+.pipepal-hidden { display: none !important; }
+
+/* Header */
+#pipepal-header {
+  background: #004080; color: #fff; padding: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: bold;
+}
+
+/* Message body */
+#pipepal-body {
+  flex: 1 1 auto; padding: 15px; background: #f8f9fa;
+  overflow-y: auto; scrollbar-width: thin;
+}
+
+/* Messages */
+.pipepal-msg {
+  margin-bottom: 12px; padding: 12px; border-radius: 8px;
+  font-size: 14px; line-height: 1.4; max-width: 85%;
+}
+.pipepal-bot {
+  background: #e0ebff; color: #003366; align-self: flex-start;
+  border-left: 3px solid #004080;
+}
+.pipepal-user {
+  background: #0066cc; color: #fff; align-self: flex-end;
+  text-align: right; border-right: 3px solid #003366;
+}
+
+/* Quick buttons (pinned above input) */
+.pipepal-quick-buttons {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 10px; background: #f8f9fa;
+  position: sticky; bottom: 0; z-index: 10;
+}
+.pipepal-quick-buttons button {
+  flex: 1; min-width: 100px;
+  background: #004080; color: #fff; border: none; padding: 10px;
+  border-radius: 6px; cursor: pointer; transition: background .2s;
+}
+.pipepal-quick-buttons button:hover { background: #0066cc; }
+
+/* Emergency‑style quick buttons */
+.emergency-btn.plumbing   { background: #e74c3c; }
+.emergency-btn.electrical { background: #f39c12; }
+.emergency-btn.heating    { background: #3498db; }
+
+/* Typing indicator */
+#pipepal-typing {
+  display: none; padding: 8px 15px; font-style: italic; color: #666;
+}
+
+/* Input area */
+#pipepal-input {
+  display: flex; border-top: 1px solid #ddd; background: #fff;
+}
+#pipepal-user-input {
+  flex: 1; padding: 12px; border: none; outline: none; font-family: inherit;
+}
+#pipepal-send {
+  background: #0066cc; color: #fff; border: none; padding: 0 20px;
+  cursor: pointer; transition: background .2s;
+}
+#pipepal-send:hover { background: #004080; }

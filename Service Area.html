@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heating & Cooling | Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+    header, footer { background-color: #002855; color: white; text-align: center; padding: 15px; }
+    nav { background-color: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { padding: 15px 20px; color: white; text-decoration: none; }
+    nav a:hover { background-color: #0066cc; }
+
+    .banner { background-color: #004080; color: white; padding: 40px 20px; text-align: center; }
+    .banner h1 { margin-bottom: 8px; font-size: 32px; }
+    .banner p  { font-size: 16px; }
+
+    /* AI Assistant Buttons */
+    .ai-assistant { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+    .ai-btn {
+      background: #002855; color: #fff; border: none; padding: 12px 20px;
+      border-radius: 50px; cursor: pointer; display: flex; align-items: center;
+      gap: 8px; transition: all 0.3s;
+    }
+    .ai-btn:hover { background: #0066cc; transform: scale(1.05); }
+
+    /* Emergency Section */
+    .emergency-section { padding: 20px; text-align: center; border-bottom: 1px solid #ddd; background: #f8f9fa; }
+    .emergency-section h2 { color: #004080; margin-bottom: 6px; }
+    .emergency-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 12px; }
+    .emergency-btn {
+      display: flex; align-items: center; gap: 8px; padding: 15px 25px;
+      color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .emergency-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+    .emergency-btn.plumbing   { background: #e74c3c; }
+    .emergency-btn.electrical { background: #f39c12; }
+    .emergency-btn.heating    { background: #3498db; }
+
+    .areas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px 20px; text-align: center; background: white; }
+    .area-card a { text-decoration: none; color: #004080; font-weight: bold; font-size: 18px; display: block; padding: 20px; border-radius: 8px; background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+ 
+    .map-section { text-align: center; padding: 20px; background: #eef4ff; }
+    .map-section iframe { width: 100%; max-width: 800px; height: 400px; border: none; }
+
+    /* Quote CTA */
+    .quote-cta { text-align: center; margin: 40px 0; }
+    .quote-cta a {
+      padding: 14px 28px;
+      background: #ff4d4d;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .quote-cta a:hover { background: #e04343; }
+
+    /* Chatbot container */
+    #pipepal-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+
+    /* Footer */
+    footer { background:#002855;color:#ccc;padding:40px 20px; }
+    .footer-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;
+    }
+    .footer-section h4 { color:#fff;margin-bottom:12px; }
+    .footer-section a { color:#ccc;text-decoration:none;display:block;margin-bottom:5px; }
+    .footer-section a:hover { color:#fff; }
+    .social-icons img { height:30px;margin:5px;transition:transform .3s; }
+    .social-icons img:hover { transform:scale(1.1); }
+    .footer-bottom { text-align:center;color:#aaa;font-size:14px;margin-top:40px;
+                     border-top:1px solid #444;padding-top:20px; }
+  </style>
+</head>
+<body>
+  <header>
+    ⭐ Now Serving Southern Arizona | Call (520) 333-2121
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <div class="banner">
+    <h1>Our Service Areas</h1>
+    <p>Proudly serving homes and businesses across Southern Arizona.</p>
+    <div class="ai-assistant">
+      <button class="ai-btn" id="ai-voice-btn">🎤 Voice Help</button>
+      <button class="ai-btn" onclick="openPhotoDiagnosis()">📷 Photo Diagnosis</button>
+    </div>
+  </div>
+
+  <section class="emergency-section">
+    <h2>24/7 Emergency Services</h2>
+    <p>Immediate assistance for urgent issues</p>
+    <div class="emergency-buttons">
+      <a href="tel:5203332121" class="emergency-btn plumbing">🚰 Plumbing Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn electrical">⚡ Electrical Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn heating">🔥 HVAC Emergency</a>
+    </div>
+  </section>
+
+  <section class="areas">
+    <div class="area-card"><a href="tucson.html">Tucson</a></div>
+    <div class="area-card"><a href="sahuarita.html">Sahuarita</a></div>
+    <div class="area-card"><a href="green-valley.html">Green Valley</a></div>
+    <div class="area-card"><a href="vail.html">Vail</a></div>
+    <div class="area-card"><a href="oro-valley.html">Oro Valley</a></div>
+    <div class="area-card"><a href="marana.html">Marana</a></div>
+  </section>
+
+  <div class="map-section">
+    <h2>Find Us on the Map</h2>
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3344.802133819639!2d-110.97470918481026!3d32.222606981148295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86d6706d06000001%3A0xd5b83c1673cbf66d!2sTucson%2C%20AZ!5e0!3m2!1sen!2sus!4v1616170996932!5m2!1sen!2sus"
+      allowfullscreen="" loading="lazy"></iframe>
+  </div>
+
+  <div class="quote-cta">
+    <a href="Quote Form.html">Need Service in Your Area? Get a Free Quote</a>
+  </div>
+
+  <!-- Chatbot Loader (unchanged) -->
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+        const css = document.createElement("link");
+        css.rel  = "stylesheet";
+        css.href = "pipepal.css";
+        document.head.appendChild(css);
+
+        const s = document.createElement("script");
+        s.src = "pipepal.js";
+        s.onload = () => initPipepal();
+        document.body.appendChild(s);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+
+    // wire up voice button
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("ai-voice-btn")?.addEventListener("click", () => {
+        if (!("webkitSpeechRecognition" in window)) {
+          return alert("Voice commands require Chrome or Edge");
+        }
+        document.getElementById("pipepal-chat")?.classList.remove("pipepal-hidden");
+        const rec = new webkitSpeechRecognition();
+        rec.lang = "en-US"; rec.start();
+        document.getElementById("pipepal-body")
+          .insertAdjacentHTML("beforeend",
+            `<div class="pipepal-msg pipepal-bot">🎙 Listening... please describe your issue</div>`);
+        rec.onresult = e => {
+          document.getElementById("pipepal-user-input").value = e.results[0][0].transcript;
+          document.getElementById("pipepal-send").click();
+        };
+      });
+    });
+  </script>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>CONTACT US</h4>
+        <p>5141 N Casa Grande Hwy<br/>Tucson, AZ 85743</p>
+        <p>📞 520.333.2121</p>
+        <p>
+          ROC #113429<br/>
+          ROC #113428<br/>
+          ROC #117826<br/>
+          ROC #117825<br/>
+          ROC #154634
+        </p>
+      </div>
+      <div class="footer-section">
+        <h4>OUR SERVICES</h4>
+        <a href="plumbing.html">Plumbing</a>
+        <a href="Heating & Cooling.html">Heating & Cooling</a>
+        <a href="Electrical.html">Electrical</a>
+        <a href="Repipe.html">Repipe</a>
+        <a href="Water Heater.html">Water Heaters</a>
+      </div>
+      <div class="footer-section">
+        <h4>QUICK LINKS</h4>
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About Us</a>
+        <a href="Quote Form.html">Free Quotes</a>
+        <a href="#">Careers</a>
+        <a href="#">Customer Survey</a>
+      </div>
+      <div class="footer-section">
+        <h4>AWARDS</h4>
+        <img src="BBB.png" alt="BBB Accredited" style="height:40px;"/>
+        <img src="carier.jfif" alt="Carrier Partner" style="height:40px;"/>
+        <p>BBB Rating: A+</p>
+        <div class="social-icons">
+          <img src="facebook.png" alt="Facebook"/>
+          <img src="youtube.png" alt="YouTube"/>
+          <img src="instagram.jfif" alt="Instagram"/>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Arizona Plumbing Pros. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

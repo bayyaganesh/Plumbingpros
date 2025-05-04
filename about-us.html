@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+    header, footer { background-color: #002855; color: white; text-align: center; }
+    nav { background-color: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { padding: 15px 20px; color: white; text-decoration: none; }
+    nav a:hover { background-color: #0066cc; }
+ /* Emergency Section */
+ .emergency-section { padding: 20px; text-align: center; border-bottom: 1px solid #ddd; background: #f8f9fa; }
+    .emergency-section h2 { color: #004080; margin-bottom: 6px; }
+    .emergency-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 12px; }
+    .emergency-btn {
+      display: flex; align-items: center; gap: 8px; padding: 15px 25px;
+      color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .emergency-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+    .emergency-btn.plumbing   { background: #e74c3c; }
+    .emergency-btn.electrical { background: #f39c12; }
+    .emergency-btn.heating    { background: #3498db; }
+    .banner { background-color: #004080; color: white; padding: 50px 20px; text-align: center; }
+    .banner h1 { margin-bottom: 8px; font-size: 32px; }
+    .banner p  { font-size: 16px; }
+
+    .content { max-width: 900px; margin: 40px auto; padding: 0 20px; background: white; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.05); }
+    .content h2 { color: #004080; margin-top: 20px; }
+    .content p  { color: #1e95a5; line-height: 1.7; }
+
+    .quote-cta { text-align: center; margin: 40px 0; }
+    .quote-cta a {
+      padding: 14px 28px;
+      background: #ff4d4d;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .quote-cta a:hover { background: #e04343; }
+
+    /* Chatbot container (unchanged) */
+    #pipepal-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+
+    /* FOOTER UPDATES */
+    footer {
+      padding: 60px 20px;         /* more vertical breathing room */
+      font-size: 16px;            /* larger base text */
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-section h4 {
+      color: #fff;
+      font-size: 20px;            /* larger headings */
+      margin-bottom: 16px;        /* more space below */
+    }
+    .footer-section p,
+    .footer-section a {
+      color: #ccc;
+      font-size: 15px;            /* slightly bigger links/text */
+      margin-bottom: 10px;        /* more vertical spacing */
+      line-height: 1.4;
+    }
+    .footer-section a { text-decoration: none; display: block; }
+    .footer-section a:hover { color: #fff; }
+    .footer-section img {
+      margin: 8px 10px;           /* more gap around logos */
+      vertical-align: middle;
+    }
+    .social-icons img {
+      height: 30px;
+      margin: 5px;
+      transition: transform .3s;
+    }
+    .social-icons img:hover {
+      transform: scale(1.1);
+    }
+    .footer-bottom {
+      padding-top: 30px;          /* separate from above */
+      font-size: 14px;            /* slightly smaller for contrast */
+      color: #aaa;
+      border-top: 1px solid #444;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    ⭐ Arizona's Trusted Service Pros | Call (520) 333-2121
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <div class="banner">
+    <h1>About Arizona Plumbing Pros</h1>
+    <p>Serving Arizona homes and businesses with pride, professionalism, and people-first service.</p>
+    <div class="ai-assistant">
+      <button class="ai-btn" id="ai-voice-btn">🎤 Voice Help</button>
+      <button class="ai-btn" onclick="openPhotoDiagnosis()">📷 Photo Diagnosis</button>
+    </div>
+  </div>
+  <section class="emergency-section">
+    <h2>24/7 Emergency Services</h2>
+    <p>Immediate assistance for urgent issues</p>
+    <div class="emergency-buttons">
+      <a href="tel:5203332121" class="emergency-btn plumbing">🚰 Plumbing Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn electrical">⚡ Electrical Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn heating">🔥 HVAC Emergency</a>
+    </div>
+  </section>
+  
+  <div class="content">
+    <h2>Who We Are</h2>
+    <p>
+      Arizona Plumbing Pros is a licensed and family-owned company built on trust, experience, and results.
+      We’ve proudly served Tucson, Sahuarita, Marana, Oro Valley, Green Valley, and surrounding communities for over 20 years.
+    </p>
+
+    <h2>What We Stand For</h2>
+    <p>
+      Our mission is simple: to provide quality work, excellent customer service, and quick response times—all at fair prices.
+      Whether you’re dealing with an emergency or planning a large-scale upgrade, our team is here for you.
+    </p>
+
+    <h2>Licenses & Certifications</h2>
+    <p>
+      We are fully licensed and insured in the state of Arizona.<br>
+      ROC #113429, ROC #113428, ROC #117826, ROC #117825, ROC #154634
+    </p>
+
+    <h2>Why Customers Choose Us</h2>
+    <ul>
+      <li>✅ 24/7 Emergency Response</li>
+      <li>✅ Licensed, Insured & Background Checked Technicians</li>
+      <li>✅ Google 5-Star Rated & BBB Accredited (A+)</li>
+      <li>✅ Transparent Quotes with No Hidden Fees</li>
+      <li>✅ Membership Perks for Ongoing Discounts</li>
+    </ul>
+
+    <div class="quote-cta">
+      <a href="Quote Form.html">Need Service in Your Area? Get a Free Quote</a>
+    </div>
+  </div>
+
+  <!-- Chatbot Loader (unchanged) -->
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+        const css = document.createElement("link");
+        css.rel  = "stylesheet";
+        css.href = "pipepal.css";
+        document.head.appendChild(css);
+
+        const s = document.createElement("script");
+        s.src = "pipepal.js";
+        s.onload = () => initPipepal();
+        document.body.appendChild(s);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+  </script>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>CONTACT US</h4>
+        <p>5141 N Casa Grande Hwy<br/>Tucson, AZ 85743</p>
+        <p>📞 520.333.2121</p>
+        <p>
+          ROC #113429<br/>
+          ROC #113428<br/>
+          ROC #117826<br/>
+          ROC #117825<br/>
+          ROC #154634
+        </p>
+      </div>
+      <div class="footer-section">
+        <h4>OUR SERVICES</h4>
+        <a href="plumbing.html">Plumbing</a>
+        <a href="Heating & Cooling.html">Heating & Cooling</a>
+        <a href="Electrical.html">Electrical</a>
+        <a href="Repipe.html">Repipe</a>
+        <a href="Water Heater.html">Water Heaters</a>
+      </div>
+      <div class="footer-section">
+        <h4>QUICK LINKS</h4>
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About Us</a>
+        <a href="Quote Form.html">Free Quotes</a>
+        <a href="#">Careers</a>
+        <a href="#">Customer Survey</a>
+      </div>
+      <div class="footer-section">
+        <h4>AWARDS</h4>
+        <img src="BBB.png" alt="BBB Accredited" style="height:40px;"/>
+      <img src="carier.jfif" alt="Carrier Partner" style="height:40px;"/>
+        <p>BBB Rating: A+</p>
+        <div class="social-icons">
+          <img src="facebook.png" alt="Facebook"/>
+          <img src="youtube.png" alt="YouTube"/>
+          <img src="instagram.jfif" alt="Instagram"/>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Arizona Plumbing Pros. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>

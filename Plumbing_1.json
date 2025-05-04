@@ -1,0 +1,2439 @@
+{
+  "name": "Plumbing 1",
+  "nodes": [
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.extractedData.IntentName }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Pricing",
+              "output": 1
+            },
+            {
+              "value2": "Emergency",
+              "output": 2
+            },
+            {
+              "value2": "Services Available",
+              "output": 3
+            }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "id": "4b27e512-011a-4be0-ac42-00f951e1fbd5",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -6248,
+        905
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pipepal-sosy",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "7532154b-2c68-4fe1-98f8-bd6878cd7799",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -8880,
+        1020
+      ],
+      "webhookId": "83f9f612-a69b-4f11-9851-332b049beccc"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are PipePal, a friendly virtual assistant for Arizona Plumbing Pros.\n\nWhen the user greets you (case-insensitive match of any of):\n  • “hi”, “hello”, “hey”, “good morning”, “good afternoon”, “good evening”\nReply with:\n  Hello! How can I help you today?\n\nWhen the user thanks you (CI match of any of):\n  • “thanks”, “thank you”, “thx”, “appreciate it”, “grateful”\nReply with:\n  No problem! Happy to help.\n\nWhen the user asks about pricing, quotes, or booking (CI phrases including any of):\n  • “price”, “pricing”, “quote”, “how much”, “cost”, “book”, “book an appointment”, “schedule service”\nReply with a clarifying question:\n  Sure—what service are you interested in pricing for?\n\n\n\nWhen the user mentions an emergency (CI match of any of):\n  • “emergency”, “urgent”, “leak”, “burst”, “flood”, “no water”, “gas leak”, “running water”, “flooding”, “water damage”, “burst pipe”\nClassify as **Emergency** and extract details per your usual schema.\n\nFor any other questions, respond in a warm, professional tone, clearly and concisely in natural English.\n",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.message || $json.queryResult?.queryText || $json.FulfillmentText || $json.IntentName || \"plumbing help\" }}\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -6624,
+        1701
+      ],
+      "id": "0ff40a42-19ca-4a9f-a66d-77dcf4272f2d",
+      "name": "OpenAI_switch1",
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6248,
+        1701
+      ],
+      "id": "dda737b4-752c-4ada-a17e-37965e759238",
+      "name": "Respond to Webhook_switch1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a74aaa04-958f-4fef-b6d4-b891124b8c1a",
+              "name": "IntentName",
+              "value": "={{ $json.extractedData.IntentName }}",
+              "type": "string"
+            },
+            {
+              "id": "574f11cf-26f5-40ec-ab78-29d2b7ff566d",
+              "name": "Name",
+              "value": "={{ $json.extractedData.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "ee164556-b1a2-4e49-9946-49e7c773ceef",
+              "name": "RequestedService",
+              "value": "={{ $json.extractedData.RequestedService }}",
+              "type": "string"
+            },
+            {
+              "id": "a02bfb15-864b-4329-a886-4f567af5f4c9",
+              "name": "CustomerID",
+              "value": "={{ $json.extractedData.CustomerID }}",
+              "type": "string"
+            },
+            {
+              "id": "00469a3f-6eea-4ed9-8a59-bb3ace98f7d0",
+              "name": "Email",
+              "value": "={{ $json.extractedData.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6028,
+        926
+      ],
+      "id": "80aeb2a9-54dc-46f0-b2f6-91e5bcc062fa",
+      "name": "Pricing",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "fulfillmentText",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -2572,
+        926
+      ],
+      "id": "0a7c808c-3895-4a69-892c-2cc3fe2909b3",
+      "name": "Split Out",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c9b4e885-6f5d-4f13-8c85-2f20e55e8001",
+              "name": "CustomerTier",
+              "value": "New",
+              "type": "string"
+            },
+            {
+              "id": "cb478ad5-f494-490b-a7a4-bb7122ce9e87",
+              "name": "CustomerID",
+              "value": "=CUST{{ Math.floor(1000 + Math.random() * 9000) }}",
+              "type": "string"
+            },
+            {
+              "id": "3f64da97-9390-4ae6-8699-f9853e5cdd3a",
+              "name": "RequestedService",
+              "value": "={{ $json.RequestedService }}",
+              "type": "string"
+            },
+            {
+              "id": "f8f55c20-f7ad-4256-8483-5c9f37247409",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5148,
+        1026
+      ],
+      "id": "52cc3cf6-334b-424f-987f-ccee09f06d90",
+      "name": "Set Tier",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "CustomerID",
+        "joinMode": "keepEverything",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -4708,
+        926
+      ],
+      "id": "d5107543-af1d-4a85-86b6-dab588919549",
+      "name": "Merge Tier Infor",
+      "alwaysOutputData": true,
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -2132,
+        826
+      ],
+      "id": "d8d7f9c0-f77b-47b4-b1bc-0bc77fcb99b2",
+      "name": "Fast Response",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ganeshbabybayya17.app.n8n.cloud/webhook/log-lead",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={\n  \"Name\": \"{{ $json.Name }}\",\n  \"Email\": \"{{ $json.Email }}\",\n  \"RequestedService\": \"{{ $json['RequestedService'] || $json['RequestedService '] || 'N/A' }}\",\n  \"TotalPrice\": \"{{ $json.TotalPrice}}\",\n  \"CustomerID\": \"{{ $json.CustomerID }}\",\n  \"QuoteID\": \"{{ $json.quoteId }}\"\n\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"Name\": \"{{ $json.Name }}\",\n  \"Email\": \"{{ $json.Email }}\",\n  \"RequestedService\": \"{{ $json['RequestedService'] || $json['RequestedService '] || 'N/A' }}\",\n  \"TotalPrice\": \"{{ $json.TotalPrice}}\",\n  \"CustomerID\": \"{{ $json.CustomerID }}\",\n  \"quoteId\": \"{{ $json.quoteId }}\"\n\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2352,
+        1026
+      ],
+      "id": "08629225-d889-4321-92b0-9aa53d64d13a",
+      "name": "HTTP Request",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "const pricing = {\n  \"Drain Cleaning\": { New: 149, Silver: 139, Gold: 129, Platinum: 119 },\n  \"Water Heater Installation\": { New: 999, Silver: 949, Gold: 899, Platinum: 849 },\n  \"Faucet Repair\": { New: 120, Silver: 110, Gold: 100, Platinum: 90 },\n  \"Toilet Repair\": { New: 130, Silver: 120, Gold: 110, Platinum: 100 },\n  \"Garbage Disposal Installation\": { New: 299, Silver: 279, Gold: 259, Platinum: 239 },\n  \"AC Repair\": { New: 199, Silver: 179, Gold: 159, Platinum: 139 },\n  \"AC Installation\": { New: 3200, Silver: 3100, Gold: 2950, Platinum: 2800 },\n  \"Furnace Maintenance\": { New: 179, Silver: 165, Gold: 150, Platinum: 135 },\n  \"Generator Installation\": { New: 2200, Silver: 2100, Gold: 2000, Platinum: 1900 },\n  \"EV Charger Installation\": { New: 750, Silver: 700, Gold: 675, Platinum: 650 },\n  \"Leak Detection\": { New: 175, Silver: 160, Gold: 145, Platinum: 130 },\n  \"Pipe Burst Repair\": { New: 289, Silver: 269, Gold: 249, Platinum: 229 },\n  \"Water Heater Repair\": { New: 220, Silver: 190, Gold: 170, Platinum: 155 }\n};\n\nconst TAX_RATE = 0.10;\n\nconst serviceInput = $json.RequestedService;\nconst services = Array.isArray(serviceInput)\n  ? serviceInput\n  : [serviceInput];  // fallback to array\n\nconst name = $json.Name;\nconst customerID = $json.CustomerID;\nconst tier = $json.CustomerTier || \"New\";\nconst email = $json.Email;\n\nconst results = services.map(service => {\n  const base = pricing[service]?.[tier] ?? null;\n  const tax = base ? +(base * TAX_RATE).toFixed(2) : null;\n  const total = base ? +(base + tax).toFixed(2) : null;\n\n  return {\n    Name: name,\n    CustomerID: customerID,\n    Email: email,\n    Service: service,\n    Tier: tier,\n    BasePrice: base,\n    Tax: tax,\n    TotalPrice: total\n  };\n});\n\nreturn results.map(item => ({ json: item }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4268,
+        1001
+      ],
+      "id": "352abef0-6a8b-4ba8-870d-147af74312bb",
+      "name": "Pricingquotes",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d73a60c-5b39-4d41-bbe4-998bea42de01",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "5eceec3c-62fe-4b42-9f73-ab5abfb86724",
+              "name": "CustomerID",
+              "value": "={{ $json.CustomerID }}",
+              "type": "string"
+            },
+            {
+              "id": "53c7dfd5-1ccc-42e7-bce3-769a5b6f9ef3",
+              "name": "Tier",
+              "value": "={{ $json.Tier }}",
+              "type": "string"
+            },
+            {
+              "id": "6479ce9f-845d-4e6e-8ebd-1241b1881758",
+              "name": "RequestedService",
+              "value": "={{ $node[\"Lookup_customer\"].json[\"RequestedService\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2d41edb0-f4ec-4c83-b324-565729b892da",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4928,
+        826
+      ],
+      "id": "fda9d783-c76c-4fda-8f88-97864cb12194",
+      "name": "Lookup_Set"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a6569d5f-f8c4-4586-bb17-7d1ffa5ad26a",
+              "name": "Name",
+              "value": "={{ $json[\"Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d97a281a-8d41-4c71-8450-3aeefbe5b06f",
+              "name": "RequestedService",
+              "value": "={{ $json[\"RequestedService\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "51edde4b-9328-4a53-a0ea-90fb9e770470",
+              "name": "CustomerID",
+              "value": "={{ $json[\"CustomerID\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "253981d8-6b38-40c8-8a92-ab3eb386ca9e",
+              "name": "CustomerTier",
+              "value": "=New",
+              "type": "string"
+            },
+            {
+              "id": "7ae6a0f6-2464-43ef-bb91-f8b68a97d244",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4928,
+        1026
+      ],
+      "id": "c5afbd3a-f9b4-4ee5-a4c0-42202efe4e33",
+      "name": "Setup_set"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fa074a43-5d00-4f33-8e50-be2c22f9c1bd",
+              "name": "RequestedService",
+              "value": "={{ $json[\"RequestedService\"].replace(/\\b\\w/g, l => l.toUpperCase()) }}",
+              "type": "string"
+            },
+            {
+              "id": "e3d03d04-cb25-4268-8142-0ba07b703518",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "0332d6cb-3905-4378-b81a-716e37245681",
+              "name": "CustomerTier",
+              "value": "={{ $json.CustomerTier }}",
+              "type": "string"
+            },
+            {
+              "id": "bd6127b0-2f44-49cc-bf79-2ab9400b7bbd",
+              "name": "CustomerID",
+              "value": "={{ $json.CustomerID }}",
+              "type": "string"
+            },
+            {
+              "id": "3a27c898-66a8-47d9-8e83-62e81830d775",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4488,
+        926
+      ],
+      "id": "a2fef2e0-fa84-465d-92c6-3c9d938e1098",
+      "name": "Merge_Set"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI",
+          "mode": "list",
+          "cachedResultName": "Pipepal_plumbing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 525654131,
+          "mode": "list",
+          "cachedResultName": "CustomerDirectory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit#gid=525654131"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "CustomerID",
+              "lookupValue": "={{ $json[\"CustomerID\"].trim() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -5808,
+        851
+      ],
+      "id": "b9fc7bcc-95af-4ad8-adae-a6ff401e3914",
+      "name": "Lookup Customer1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "bFwu27MS4uXSkeks",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI",
+          "mode": "list",
+          "cachedResultName": "Pipepal_plumbing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 525654131,
+          "mode": "list",
+          "cachedResultName": "CustomerDirectory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit#gid=525654131"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "CustomerID",
+              "lookupValue": "={{ $json.CustomerID}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -5148,
+        826
+      ],
+      "id": "b9d9903a-94ec-47ad-a4a6-0b00930c9fe2",
+      "name": "Google Sheets",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "bFwu27MS4uXSkeks",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -5588,
+        926
+      ],
+      "id": "63e4f52e-0110-4445-82ba-c051ef4df324",
+      "name": "Price & Lookup"
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ [\"\", \"n/a\", null, \"null\", \"undefined\", \"i'm new\", \"i m new\", \"new\"].includes(($json.CustomerID || \"\").toLowerCase()) ? 1 : 0 }}\n",
+        "looseTypeValidation": true
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -5368,
+        926
+      ],
+      "id": "eb5e5e71-34e8-45f7-9de8-b5039606c064",
+      "name": "Lookup_customer"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -4048,
+        926
+      ],
+      "id": "9e38de5e-72fb-4786-9cab-da4bf3212fa4",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = items[0].json.data[0];\nlet services = [];\n\ntry {\n  if (Array.isArray(input.RequestedService)) {\n    services = input.RequestedService;\n  } else if (typeof input.RequestedService === 'string') {\n    services = JSON.parse(input.RequestedService);\n    if (!Array.isArray(services)) {\n      services = [services];\n    }\n  }\n} catch (e) {\n  services = [input.RequestedService];\n}\n\nconst tier = input.CustomerTier || \"New\";\n\nconst pricing = {\n   \"Drain Cleaning\": { New: 149, Silver: 139, Gold: 129, Platinum: 119 },\n  \"Water Heater Installation\": { New: 999, Silver: 949, Gold: 899, Platinum: 849 },\n  \"Faucet Repair\": { New: 120, Silver: 110, Gold: 100, Platinum: 90 },\n  \"Toilet Repair\": { New: 130, Silver: 120, Gold: 110, Platinum: 100 },\n  \"Garbage Disposal Installation\": { New: 299, Silver: 279, Gold: 259, Platinum: 239 },\n  \"AC Repair\": { New: 199, Silver: 179, Gold: 159, Platinum: 139 },\n  \"AC Installation\": { New: 3200, Silver: 3100, Gold: 2950, Platinum: 2800 },\n  \"Furnace Maintenance\": { New: 179, Silver: 165, Gold: 150, Platinum: 135 },\n  \"Generator Installation\": { New: 2200, Silver: 2100, Gold: 2000, Platinum: 1900 },\n  \"EV Charger Installation\": { New: 750, Silver: 700, Gold: 675, Platinum: 650 },\n  \"Leak Detection\": { New: 175, Silver: 160, Gold: 145, Platinum: 130 },\n  \"Pipe Burst Repair\": { New: 289, Silver: 269, Gold: 249, Platinum: 229 },\n  \"Water Heater Repair\": { New: 220, Silver: 190, Gold: 170, Platinum: 155 }\n};\n\nconst TAX_RATE = 0.1;\n\nconst quotes = services.map(service => {\n  const base = pricing[service]?.[tier] ?? 0;\n  const tax = +(base * TAX_RATE).toFixed(2);\n  const total = +(base + tax).toFixed(2);\n\n  return {\n    Name: input.Name,\n    Email: input.Email,\n    CustomerID: input.CustomerID,\n    Tier: tier,\n    Service: service,\n    BasePrice: base,\n    Tax: tax,\n    TotalPrice: total\n  };\n});\n\nreturn quotes.map(q => ({ json: q }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3828,
+        926
+      ],
+      "id": "9c1dbeeb-ce22-4c30-a088-b7663b8dbda2",
+      "name": "Pricing code"
+    },
+    {
+      "parameters": {
+        "jsCode": "const quoteItems = items.map(item => item.json);\n\nconst rows = quoteItems.map(item => `\n  <tr>\n    <td>${item.Service.trim()}</td>\n    <td>$${item.BasePrice}</td>\n    <td>$${item.Tax}</td>\n    <td><strong>$${item.TotalPrice}</strong></td>\n  </tr>\n`).join(\"\");\n\nconst total = quoteItems.reduce((sum, item) => sum + item.TotalPrice, 0);\n\n// Calendar link\nconst calendarLink = 'https://calendar.google.com/calendar/u/0/r/day';\n\nconst html = `\n  <h2>Hi ${quoteItems[0].Name},</h2>\n  <p>Here’s a breakdown of your service quote:</p>\n  <table border=\"1\" cellpadding=\"6\" cellspacing=\"0\">\n    <tr><th>Service</th><th>Base</th><th>Tax</th><th>Total</th></tr>\n    ${rows}\n  </table>\n  <p><strong>Total Quote:</strong> $${total.toFixed(2)}</p>\n  <p>\n    <a href=\"${calendarLink}\" target=\"_blank\" style=\"display:inline-block; padding:10px 15px; background:#007bff; color:white; text-decoration:none; border-radius:5px;\">\n      📅 Book an Appointment\n    </a>\n  </p>\n`;\n\nconst plainRows = quoteItems.map(item =>\n  `• ${item.Service.trim()}: $${item.BasePrice} + $${item.Tax} tax = $${item.TotalPrice}`\n).join('\\n');\n\nconst text = `Hi ${quoteItems[0].Name}, Here’s your quote summary:\\n${plainRows}\\nTotal: $${total.toFixed(2)}\\nBook now: ${calendarLink}`;\n\nconst quoteId = `PIPE-${Math.floor(1000 + Math.random() * 9000)}`;\nconst Tier = $input.first().json.Tier;\nconst Baseprice = $input.first().json.BasePrice;\nconst Tax = $input.first().json.Tax;\nconst bookLink = \"https://calendar.google.com/calendar/u/0/r/day\";;\n\nreturn [{\n  json: {\n    Name: quoteItems[0].Name,\n    Email: quoteItems[0].Email,\n    Tier : Tier,\n    QuoteHTML: html,\n    QuoteText: text,\n    Baseprice : Baseprice,\n    Tax : Tax,\n    TotalQuote: total,\n    quoteId: quoteId,\n    CustomerID: quoteItems[0].CustomerID,\n    RequestedService: quoteItems.map(i => i.Service.trim()).join(\", \"),\n    bookLink: bookLink\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3608,
+        926
+      ],
+      "id": "78f4856e-eaa8-47a3-83cb-6a1573933a0a",
+      "name": "Code",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6d66af0-c73a-4db4-b398-da5710a8e485",
+              "name": "Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "e628a05a-efec-4ec4-87ea-a408322e5c9f",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "43d94548-f296-4b27-b4b3-a4ba5d250364",
+              "name": "CustomerID",
+              "value": "={{ $json.CustomerID }}",
+              "type": "string"
+            },
+            {
+              "id": "16df628c-017f-4e45-84d0-ef56d40e18b3",
+              "name": "RequestedService ",
+              "value": "={{ $json.RequestedService }}",
+              "type": "string"
+            },
+            {
+              "id": "b5cdce32-8e2e-48c4-a50b-bf35f5c789c0",
+              "name": "TotalPrice",
+              "value": "={{ $json.TotalQuote }}",
+              "type": "string"
+            },
+            {
+              "id": "7dcf5e2b-465b-4211-bf2b-2de307e61913",
+              "name": "fulfillmentText",
+              "value": "={{ $json.QuoteText }}",
+              "type": "string"
+            },
+            {
+              "id": "eb82ded3-25c3-4dfd-8b18-8c7d51f67489",
+              "name": "QuoteHTML",
+              "value": "={{ $json.QuoteHTML }}",
+              "type": "string"
+            },
+            {
+              "id": "3bb37f87-e716-41fe-8fa8-3c6f4faa13ba",
+              "name": "quoteId",
+              "value": "={{ $json.quoteId }}",
+              "type": "string"
+            },
+            {
+              "id": "5839cf31-c894-4fc1-8465-7dffa2daa746",
+              "name": "message",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2792,
+        926
+      ],
+      "id": "9815f869-9f59-4d46-9181-2fb6b0634b0a",
+      "name": "fulfillment",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51081dc0-7d5d-4017-8390-d71223aae3b7",
+              "name": "quoteId",
+              "value": "={{ $json.quoteId }}",
+              "type": "string"
+            },
+            {
+              "id": "9c7785df-cf54-45c5-b85c-6ddb0e22f512",
+              "name": "fulfillmentText",
+              "value": "={{ $json.fulfillmentText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2352,
+        826
+      ],
+      "id": "7d947562-5fb0-4eb5-a68b-c84eb2d14dea",
+      "name": "fulfilset"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are Pipepal, a smart and friendly assistant for Arizona Plumbing Pros.\n\nThe user requested {{ $json.RequestedService }}.\n\nThey are a {{$json.Tier}} member.\n\nHere's the breakdown:\n- Base Price: ${{ $json.Baseprice }}\n- Tax: ${{$json.Tax}}\n- Final Total: ${{ $json.TotalQuote }}\n\nGenerate a friendly message for the customer explaining their quote and offering to help with booking or questions {{ $json.bookLink }}.\n",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -3388,
+        1001
+      ],
+      "id": "ed2aa271-fe56-4237-91bf-c2cc1ee34001",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -3012,
+        926
+      ],
+      "id": "d41cced5-231b-4255-9bc0-4634573e4e1a",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are Pipepal, a smart assistant for Arizona Plumbing Pros. Your job is to identify the user's intent and extract required details.\n\nAvailable intents:\n- Pricing → user wants a quote or pricing\n- Emergency → urgent issue like a leak, burst pipe, flooding, water damage, sewer backup, no water, no hot water, clogged toilets overflowing, gas smell, or any situation requiring immediate assistance\n- Appointment → wants to schedule a visit, book an appointment, set up service\n- SmallTalk → greetings or casual messages like \"Hi\", \"Thanks\",\"I need help\" etc.\n- Services → \"what services are available\" ,\"services\",\"Locations\",\"I need help\",\"Services Available\",\"services available\" etc.\n-Locations  → “locations available”, “where do you serve”, “service areas”, “where are you located”, “which cities do you cover”, “areas you cover”, “coverage area”\n-• Any details needed (service type, name, email, etc.)\n\nIf intent is **Pricing**, extract and return:\n- \"RequestedService\": The plumbing service requested (e.g., \"Faucet Repair\"). If not provided, use \"N/A\".\n- \"Name\": The user's FULL name. Extract ONLY the name. If not explicitly provided, use \"Unknown\". If the name is given in a greeting, extract it (e.g., \"Hi, I'm John\" -> \"John\").\n- \"Email\": The user's email address. If not provided, use \"N/A\".\n- \"CustomerID\": If provided, extract it (e.g., \"C123\"). If the user says \"I'm new\", \"i m new\", \"no\", or \"new\", set \"CustomerID\": \"New\". If not provided and not \"New\", use \"N/A\".\n\nIf intent is **Emergency**, extract and return:\n- \"RequestedService\": The emergency plumbing issue (e.g., \"Burst Pipe\", \"Water Leak\", \"Flooding\"). Be specific. If not clear, use \"Plumbing Emergency\".\n- \"Name\": The user's FULL name. Extract ONLY the name. If not explicitly provided, use \"Unknown\".\n- \"Phone\": The user's phone number (e.g., \"555-123-4567\"). If not provided, use \"N/A\".\n- \"Address\": The user's address if provided. If not provided, use \"N/A\".\n- \"EmergencySeverity\": Rate the emergency from 1-5 based on:\n  * 5: Life-threatening (gas leak, major flooding affecting electrical)\n  * 4: Property-threatening (active flooding, sewage backup, no water service)\n  * 3: Urgent but contained (slow leak, single fixture backup)\n  * 2: Time-sensitive but not immediate danger\n  * 1: Concerning but can wait briefly\n\nIf intent is **Appointment**, extract and return:\n- \"RequestedService\": The plumbing service requested. If not provided, use \"N/A\".\n- \"Name\": The user's FULL name. If not explicitly provided, use \"Unknown\".\n- \"Email\": The user's email address. If not provided, use \"N/A\".\n- \"PreferredDate\": Preferred date for appointment. If not provided, use \"N/A\".\n- \"CustomerID\": If provided, extract it. If user says \"new\", set to \"New\". Otherwise, use \"N/A\".\n\nIf intent is **SmallTalk**, simply return:\n- \"ResponseType\": \"Greeting\" for initial greetings, \"Thanks\" for expressions of gratitude, or \"General\" for other casual conversation.\n\n👉 Extract information precisely. Do not add extra words or phrases.\n👉 If information is spread across multiple turns, try to combine.\n👉 Do not ask for information. Only extract.\n👉 ALWAYS prioritize Emergency intent if the message contains ANY urgent language or describes plumbing problems that could cause damage.\n\nPreviously provided data (if available):\n- RequestedService: {{ $json.RequestedService || \"N/A\" }}\n- Name: {{ $json.Name || \"Unknown\" }}\n- Email: {{ $json.Email || \"N/A\" }}\n- Phone: {{ $json.Phone || \"N/A\" }}\n- CustomerID: {{ $json.CustomerID || \"N/A\" }}\n- Address: {{ $json.Address || \"N/A\" }}\n\nThe user's new message will follow.\n\nReturn only a valid JSON with all fields appropriate for the detected intent:\n\nFor Emergency:\n```json\n{\n  \"IntentName\": \"Emergency\",\n  \"RequestedService\": \"...\",\n  \"Name\": \"...\",\n  \"Phone\": \"...\",\n  \"Address\": \"...\",\n  \"EmergencySeverity\": #\n}\n```\n\nFor Pricing:\n```json\n{\n  \"IntentName\": \"Pricing\",\n  \"RequestedService\": \"...\",\n  \"Name\": \"...\",\n  \"Email\": \"...\",\n  \"CustomerID\": \"...\"\n}\n```\n\nFor Appointment:\n```json\n{\n  \"IntentName\": \"Appointment\",\n  \"RequestedService\": \"...\",\n  \"Name\": \"...\",\n  \"Email\": \"...\",\n  \"PreferredDate\": \"...\",\n  \"CustomerID\": \"...\"\n}\n```\n\nFor SmallTalk:\n```json\n{\n  \"IntentName\": \"SmallTalk\",\n  \"ResponseType\": \"...\"\n}\n```",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.Message }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -7440,
+        1732.5
+      ],
+      "id": "d5fb2327-e45c-4a9f-9a00-9209eb03e0b2",
+      "name": "OpenAI2",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Robust Input Handling\nconst inputAll = $input.all();\nlet input;\n\n// Check if the input is an array or a direct object\nif (Array.isArray(inputAll) && inputAll.length > 0) {\n    input = inputAll[0].json; // If it's an array, access the first item\n} else if (inputAll && typeof inputAll === 'object') {\n    input = inputAll; // Otherwise, assume it's a direct object\n} else {\n    console.error(\"Unexpected input format:\", inputAll);\n    return { reply: \"Error processing input: Unexpected input format.\" };\n}\n\n// Logging for Debugging\nconsole.log(\"Input to Code Node:\", JSON.stringify(input, null, 2)); // Detailed input log\n\n// Initialize extracted data with default values\nlet extractedData = {\n    IntentName: \"Unknown\", // Default IntentName\n    Name: \"Unknown\",\n    Email: \"N/A\",\n    RequestedService: \"N/A\",\n    CustomerID: \"N/A\"\n};\n\n// Safe Data Access and Extraction\ntry {\n    // Extract data using optional chaining and fallback values\n    extractedData.IntentName = input?.choices?.[0]?.message?.content?.IntentName || \"Unknown\"; // Extract IntentName\n    extractedData.Name = input?.choices?.[0]?.message?.content?.Name || \"Unknown\";\n    extractedData.Email = input?.choices?.[0]?.message?.content?.Email || \"N/A\";\n    extractedData.RequestedService = input?.choices?.[0]?.message?.content?.RequestedService || \"N/A\";\n    extractedData.CustomerID = input?.choices?.[0]?.message?.content?.CustomerID || \"N/A\";\n} catch (error) {\n    console.error(\"Error extracting data:\", error);\n    return { reply: \"Error processing input: Data extraction failed.\" };\n}\n\n// Logging Extracted Data\nconsole.log(\"Extracted Data:\", JSON.stringify(extractedData, null, 2));\n\n// Handling Missing Values (More Robustly)\nconst IsMissing = (value) => {\n    const trimmedValue = (value || \"\").toString().trim().toLowerCase();\n    return !trimmedValue || [\"not provided\", \"null\", \"n/a\", \"unknown\"].includes(trimmedValue);\n};\n\nconst messages = [];\n\n// Check if data is missing and add appropriate messages\nif (IsMissing(extractedData.Name)) {\n    messages.push(\"Please provide your name.\");\n}\nif (IsMissing(extractedData.Email)) {\n    messages.push(\"Please provide your email.\");\n}\n\n// Ask for RequestedService if missing or \"N/A\"\nif (IsMissing(extractedData.RequestedService) || extractedData.RequestedService === \"N/A\") {\n    messages.push(\"What plumbing service do you need?\");\n}\n\n// Handle CustomerID: if \"New\" is provided, set CustomerID to \"New\"\nif (IsMissing(extractedData.CustomerID)) {\n    messages.push(\"Please provide your Customer ID.\");\n} else if (extractedData.CustomerID.toLowerCase() === \"new\") {\n    extractedData.CustomerID = \"New\";\n    messages.push(\"Thank you for providing 'New' as your customer ID. We'll proceed with the next steps.\");\n}\n\n// Final Response: If data is complete, acknowledge, else ask for missing details\nconst reply = messages.length > 0 ? messages.join(\" \") : \"Okay, I have the information. Your quote has been sent!\";\n\n// Final Response\nreturn {\n    reply: reply,\n    extractedData: extractedData // Optionally return extracted data for future use\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6546,
+        780
+      ],
+      "id": "6e24232b-2a0c-411a-afd3-9a4aa0a2ed35",
+      "name": "plumb",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"reply\": \"{{ $json.reply }}\"\n}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6248,
+        705
+      ],
+      "id": "d36f37ee-91ab-463a-93d4-66bcaf37a0bd",
+      "name": "Respond to Webhook",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "=Pricing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c5fa5e22-f3a8-4c39-b677-24422d7f2df5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "385817da-01ea-41e1-a3b5-39c8a7018a6f",
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "Emergency",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b9a5c130-1642-41c3-b28c-b1c159958caa",
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "Appointment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ba95651a-0eef-46fd-9b8b-f26499111fc0",
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "SmallTalk",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8146f76-940d-4670-b1ef-5aa5d32419e4",
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "Services",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "05cc8e33-a1e8-4bfb-b8d6-c8b82b4bf7cd",
+                    "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+                    "rightValue": "Locations",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -6844,
+        1538
+      ],
+      "id": "8d9c0c18-a1f2-4780-b562-d5ae88e71886",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputAll = $input.all();\nlet input;\n\n// Handling for input format\nif (Array.isArray(inputAll) && inputAll.length > 0) {\n    input = inputAll[0].json;\n} else if (inputAll && typeof inputAll === 'object') {\n    input = inputAll;\n} else {\n    console.error(\"Unexpected input format:\", inputAll);\n    return { reply: \"Error processing input: Unexpected input format.\" };\n}\n\n// Extract details from the previous node (we keep the data intact from CLeanup)\nlet extractedData = input?.extractedData || {};\n\n// Handling for missing details (like Name, Email, CustomerID)\nconst isMissing = (value) => {\n    return (value || \"\").trim() === \"\";  // Check if the value is empty or blank\n};\n\nconst messages = [];\n\n// Check if Name and Email are missing first\nif (isMissing(extractedData.Name)) {\n    messages.push(\"Please provide your name.\");\n}\nif (isMissing(extractedData.Email)) {\n    messages.push(\"Please provide your email.\");\n}\n\n// Now, check for CustomerID only after ensuring Name and Email are provided\nif (messages.length === 0) {\n    if (isMissing(extractedData.CustomerID)) {\n        messages.push(\"Please provide your customer ID. If you don't have one, type 'NEW' for a new ID.\");\n    } else if (extractedData.CustomerID.toLowerCase() === \"assign\") {\n        // If \"Assign\" is entered, assign a random customer ID\n        extractedData.CustomerID = `CUST${Math.floor(Math.random() * 1000000)}`;  // Generate a random ID like CUST123456\n        messages.push(`Thank you for choosing 'NEW' as your customer ID. Your assigned ID is ${extractedData.CustomerID}. We'll proceed with the next steps.`);\n    } else {\n        // If a valid customer ID is provided, we accept it\n        messages.push(`Your provided customer ID is: ${extractedData.CustomerID}`);\n    }\n}\n\n// Once all details are captured, generate the calendar link\nif (messages.length === 0) {\n    // Once all required data is filled, set IntentName to \"Appointment\"\n    extractedData.IntentName = \"Appointment\";  // Explicitly set to Appointment when data is complete\n\n    // Generate the appointment link\n    const appointmentLink = \"https://calendar.google.com/calendar/u/0/r/day\";  // Calendar link\n\n    return {\n        json: {\n            messages: messages.join(\" \"),  // Include the messages that have been generated\n            extractedData: extractedData,  // Pass updated data for routing\n            calendarLink: appointmentLink,  // Include the link in the response\n            reply: `Click the link to view and book your appointment: <a href=\"${appointmentLink}\" target=\"_blank\">Book Appointment</a>`  // Display the link in the reply\n        }\n    };\n}\n\n// Return the data for checking in the If node\nreturn {\n    json: {\n        // messages: messages.join(\" \"),\n        extractedData: extractedData,\n        calendarLink: \"https://calendar.google.com/calendar/u/0/r/day\"  // Ensure the calendar link is included even if it's missing required data\n    }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6248,
+        1501
+      ],
+      "id": "341c8d54-a85e-4a04-a7f9-dee500b37cf9",
+      "name": "Appointment",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputAll = $input.all();\nlet input;\n\n// Handling for input format\nif (Array.isArray(inputAll) && inputAll.length > 0) {\n    input = inputAll[0].json;\n} else if (inputAll && typeof inputAll === 'object') {\n    input = inputAll;\n} else {\n    console.error(\"Unexpected input format:\", inputAll);\n    return { reply: \"Error processing input: Unexpected input format.\" };\n}\n\n// Clean up the extracted data to remove placeholder values\nlet extractedData = {\n    IntentName: input?.choices?.[0]?.message?.content?.IntentName || \"Unknown\",\n    Name: input?.choices?.[0]?.message?.content?.Name || \"Unknown\",\n    Email: input?.choices?.[0]?.message?.content?.Email || \"N/A\",\n    CustomerID: input?.choices?.[0]?.message?.content?.CustomerID || \"New\"\n};\n\n// Reset values if they contain placeholder text (e.g., \"Unknown\", \"N/A\")\nif (extractedData.Name === \"Unknown\" || extractedData.Name === \"N/A\" || extractedData.Name === \"New\") {\n    extractedData.Name = \"\";\n}\n\nif (extractedData.Email === \"N/A\" || extractedData.Email === \"New\") {\n    extractedData.Email = \"\";\n}\n\n// If CustomerID is \"NEW\", change it to \"\"\nif (extractedData.CustomerID === \"New\" || extractedData.CustomerID === \"N/A\") {\n    extractedData.CustomerID = \"\";\n}\n\n// Pass the cleaned data to the next node\nreturn {\n    json: {\n        extractedData: extractedData\n    }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6546,
+        1501
+      ],
+      "id": "980e6669-2e31-4730-82bc-df97db77c666",
+      "name": "AppointmentCLeanup"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Emergency Handler Function Node for Arizona Plumbing Pros\n * ---------------------------------------------------------\n * If the GPT classification tells us it's an Emergency, build\n * the emergency payload; otherwise just pass the data along.\n */\n\nfunction processPlumbingEmergency(items) {\n  return items.map(item => {\n    const json = item.json;\n\n    // 1) Pull from your \"extractedData\" if you have it, otherwise\n    //    fall back to the raw GPT content (choices[0].message.content).\n    const raw = json.extractedData\n      ?? (json.choices?.[0]?.message?.content)\n      ?? {};\n\n    const IntentName       = raw.IntentName;\n    const RequestedService = raw.RequestedService  || 'Plumbing Emergency';\n    const Name             = raw.Name             || 'Unknown';\n    const Phone            = raw.Phone            || 'N/A';\n    const Address          = raw.Address          || 'N/A';\n    const EmergencySeverity= Number(raw.EmergencySeverity) || 3;\n\n    // 2) If it's not Emergency, skip this function entirely\n    if (IntentName !== 'Emergency') {\n      return item; \n    }\n\n    // 3) Build your emergency details object\n    const timestamp = new Date().toISOString();\n    const labels = {\n      5: 'CRITICAL - Immediate Response Required',\n      4: 'URGENT - High Priority',\n      3: 'STANDARD EMERGENCY',\n      2: 'PRIORITY SERVICE',\n      1: 'EXPEDITED SERVICE'\n    };\n    const severityLabel = labels[EmergencySeverity] || labels[3];\n\n    const emergencyDetails = {\n      timestamp,\n      customer: { name: Name, phone: Phone, address: Address },\n      issue: {\n        service: RequestedService,\n        severity: EmergencySeverity,\n        severityLabel,\n      },\n      responseStatus: {\n        notified: false,\n        acknowledged: false,\n        dispatchStatus: 'pending'\n      }\n    };\n\n    // 4) Customer‐facing message\n    let customerMessage = \n      `Arizona Plumbing Pros: Thank you for reporting your ${RequestedService} emergency. `;\n    if (EmergencySeverity >= 4) {\n      customerMessage +=\n        \"We understand this is URGENT. A technician will contact you IMMEDIATELY. \";\n      customerMessage +=\n        \"If this is life-threatening, please evacuate and call 911.\";\n    } else if (EmergencySeverity === 3) {\n      customerMessage +=\n        \"Our team will reach out shortly to address it.\";\n    } else {\n      customerMessage +=\n        \"A technician will contact you soon to schedule an appointment.\";\n    }\n    if (Phone !== 'N/A') {\n      customerMessage += ` We’ll call you at ${Phone}.`;\n    } else {\n      customerMessage +=\n        \" Please provide your phone number so we can reach you.\";\n    }\n\n    // 5) Technician dispatch message\n    let techMsg = `⚠️ EMERGENCY SERVICE REQUEST - ${severityLabel} ⚠️\\n\\n`;\n    techMsg += `Issue: ${RequestedService}\\n`;\n    techMsg += `Customer: ${Name}\\n`;\n    techMsg += `Phone: ${Phone}\\n`;\n    techMsg += `Address: ${Address}\\n`;\n    techMsg += `Reported at: ${new Date(timestamp).toLocaleString()}\\n\\n`;\n    if (EmergencySeverity >= 4) {\n      techMsg += \"ACTION: IMMEDIATE RESPONSE NEEDED\";\n    } else if (EmergencySeverity === 3) {\n      techMsg += \"ACTION: Contact within 15 minutes\";\n    } else {\n      techMsg += \"ACTION: Contact within 30 minutes\";\n    }\n\n    // 6) Should we initiate a call? (you can disable call logic later)\n    const callRequired = EmergencySeverity >= 4;\n\n    // 7) Return a brand-new item with all the bits you need downstream\n    return {\n      json: {\n        ...json,\n        // convenience copies\n        problemType: RequestedService,\n        severity: EmergencySeverity,\n        severityLabel,\n        // our emergency payload\n        emergencyDetails,\n        customerMessage,\n        technicianMessage: techMsg,\n        callRequired,\n        timestamp\n      }\n    };\n  });\n}\n\n// run it!\nreturn processPlumbingEmergency($input.all());\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6546,
+        1251
+      ],
+      "id": "2a31bbe7-8d75-46bf-8805-7eae9a1e3426",
+      "name": "Emergency function"
+    },
+    {
+      "parameters": {
+        "from": "+13527065785",
+        "to": "+18777804236",
+        "message": "={{ $json.technicianMessage }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        -8100,
+        -80
+      ],
+      "id": "3c29c6a1-c560-4510-9313-873265005329",
+      "name": "Twilio1",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "twilioApi": {
+          "id": "JD7eaMLrAASb7xXK",
+          "name": "Twilio account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c5d85047-30fc-4984-88cf-884e30f0830a",
+              "leftValue": "=$json.callRequired",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -6240,
+        1260
+      ],
+      "id": "854cfffd-7718-4449-98f6-2cf1b28624bb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "call",
+        "from": "+13527065785",
+        "to": "=+18765868017",
+        "twiml": true,
+        "message": "=\"Url\": \"http://twimlets.com/message?Message=Emergency%20plumbing%20service%20request%20received.%20Severity%20level%204%20or%205.%20Please%20check%20your%20SMS%20for%20details.\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        -7880,
+        -80
+      ],
+      "id": "1cff206d-a942-44ab-ad8b-255f0507bd45",
+      "name": "Twilio2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "twilioApi": {
+          "id": "JD7eaMLrAASb7xXK",
+          "name": "Twilio account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "You are PipePal, the virtual plumbing expert for Arizona Plumbing Pros.  \nAnalyze the image and return a JSON object with these fields:\n\n1. \"problemType\" — a short label (e.g. \"Pipe leak\", \"Clogged drain\", \"Broken pipe\").  \n2. \"urgency\" — integer from 1 (low) to 5 (critical).  \n3. \"repairType\" — one of \"Quick Fix\" or \"Full Replacement\".  \n4. \"specialist\" — who to call (e.g. \"Pipe Specialist\", \"Drain Technician\", \"Water Heater Expert\").  \n5. \"isEmergency\" — true if urgency ≥ 4, else false.  \n6. \"Message\" — a human-friendly sentence:\n   - If `isEmergency:true`, instruct them to call now (“⚠️ Emergency: …”).  \n   - Otherwise, briefly describe the issue and invite them to request a quote.  \n\nAlways output **only** valid JSON. For example:\n\n```json\n{\n  \"problemType\": \"Broken pipe\",\n  \"urgency\": 3,\n  \"repairType\": \"Full Replacement\",\n  \"specialist\": \"Pipe Specialist\",\n  \"isEmergency\": false,\n  \"Message\": \"Your image shows a broken copper pipe. It’s not life-threatening, but you’ll need a full replacement. Reply “Quote” to get pricing.\"\n}\n",
+        "inputType": "base64",
+        "binaryPropertyName": "imageFile",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -8480,
+        560
+      ],
+      "id": "c547f2f2-35ad-4a93-a439-9655415bdfda",
+      "name": "OpenAI1",
+      "executeOnce": false,
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5,
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -7660,
+        500
+      ],
+      "id": "1178d7c4-ae57-4b39-80db-ca888baa5cad",
+      "name": "Merge1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "993f4e42-4234-43b7-84e2-b7849b280050",
+              "leftValue": "={{$binary.imageFile !== undefined}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -8660,
+        1020
+      ],
+      "id": "7f8b9795-b24f-4917-bc06-8161096018ea",
+      "name": "If1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Grab the raw JSON string from the AI\nlet raw = $json.choices?.[0]?.message?.content;\nif (!raw) {\n  throw new Error('No image-analysis content found');\n}\n\n// Remove Markdown code fences and extract JSON\nraw = raw.trim();\nconst match = raw.match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/i);\nif (match) {\n  raw = match[1].trim();\n}\n\n// Try extracting JSON from any extra text\nlet parsed;\ntry {\n  parsed = JSON.parse(raw);\n} catch (err) {\n  // Attempt to find the first JSON object in the string\n  const jsonMatch = raw.match(/{[\\s\\S]*}/);\n  if (jsonMatch) {\n    try {\n      parsed = JSON.parse(jsonMatch[0]);\n    } catch (err2) {\n      throw new Error('Image analysis returned invalid JSON');\n    }\n  } else {\n    throw new Error('Image analysis returned invalid JSON');\n  }\n}\n\n// Return parsed fields at top level\nreturn [{ json: parsed }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -8180,
+        560
+      ],
+      "id": "fb7f0aa1-4aa2-4aa9-a79d-00ade6b07bc7",
+      "name": "Image JSON parse",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0ce904a1-6bee-4e65-aa51-d99f3c61515c",
+              "leftValue": "={{$json.problemType && typeof $json.urgency === 'number'}}",
+              "rightValue": "={{$json.content && $json.problemType}}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -7880,
+        560
+      ],
+      "id": "f503bad5-3026-46a1-a194-3c8e2a677522",
+      "name": "Image if",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\":\"error\", \"message\":\"Sorry, I couldn’t interpret that image. Please try again.\" }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -7160,
+        980
+      ],
+      "id": "05c26b5d-42a1-4a85-8890-4f7e65a20461",
+      "name": "Image Responsecfalse",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82f2b0af-01db-40f8-9732-58928c608d67",
+              "name": "problemType",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "54af9599-17b9-42e7-a7cf-4a781a88ceac",
+              "name": "repairType",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "761f7a1c-3fad-490f-ab77-92f8f4f6d0b0",
+              "name": "specialist",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "ebc44981-2eac-455f-b435-497280b3cf79",
+              "name": "isEmergency",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "12b09497-2ef6-4533-bbdf-de841a555b21",
+              "name": "Message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8120,
+        1000
+      ],
+      "id": "e1fb2c91-73df-4828-aaee-dccd86d5d6ab",
+      "name": "Edit Fields1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38c5b11b-1869-43c5-ad2e-a64f1a8024c0",
+              "leftValue": "={{ $json.choices[0].message.content.IntentName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -7064,
+        1732.5
+      ],
+      "id": "a2ebd11c-f0fd-4d20-886d-c6ae929afc13",
+      "name": "Message_if"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"error\", \"message\": \"I didn’t catch that—can you rephrase?\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6844,
+        1864
+      ],
+      "id": "18864c3c-85fb-408e-8677-bd3703fb4a94",
+      "name": "Openai_Message",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI",
+          "mode": "list",
+          "cachedResultName": "Pipepal_plumbing",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 428292156,
+          "mode": "list",
+          "cachedResultName": "Logging",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Syg9uh8RoV5BiXFsbDhfGvKlHZGrTxyc6FTau7cuvLI/edit#gid=428292156"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "problemType ": "={{ $json.problemType }}",
+            "urgency ": "={{ $json.isEmergency }}",
+            "Message ": "={{ $json.Message }}",
+            "specialist": "={{ $json.specialist }}",
+            "isEmergency": "={{ $json.isEmergency }}",
+            "repairtype": "={{ $json.repairType }}",
+            "intent ": "=={{ $json.IntentName || '' }}",
+            "timestamp ": "={{ new Date().toISOString() }}",
+            "rawPayload": "={{ JSON.stringify($json) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp ",
+              "displayName": "timestamp ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "intent ",
+              "displayName": "intent ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problemType ",
+              "displayName": "problemType ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "urgency ",
+              "displayName": "urgency ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message ",
+              "displayName": "Message ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "rawPayload",
+              "displayName": "rawPayload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "specialist",
+              "displayName": "specialist",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "isEmergency",
+              "displayName": "isEmergency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "repairtype",
+              "displayName": "repairtype",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -7360,
+        500
+      ],
+      "id": "91382567-8557-4449-88c9-5afa3e49d33a",
+      "name": "Google Sheets1",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "notesInFlow": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "bFwu27MS4uXSkeks",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"result\": $json[\"Image Analysis\"] } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -5360,
+        1260
+      ],
+      "id": "c509a956-4288-4472-9d42-dd29aefa1255",
+      "name": "Respond to Emergency"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -5800,
+        1260
+      ],
+      "id": "a83b8608-dddd-4739-a444-ff8a44e8cad8",
+      "name": "Emergency response",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "07e72b17-4812-4afa-9d50-b4be7488cb61",
+              "name": "customerMessage",
+              "value": "={{ $json.technicianMessage.match(/ACTION: (.*)/)[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "42a8bcaf-f006-427e-8d07-7f129b1bf834",
+              "name": "Image Analysis",
+              "value": "={{ $json.technicianMessage.match(/Issue: (.*?)\\n/)[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "75ad3158-d1f1-4811-a782-002f587db2ad",
+              "name": "Emergency",
+              "value": "={{ $json.technicianMessage.match(/EMERGENCY SERVICE REQUEST/)[0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5588,
+        1251
+      ],
+      "id": "968b90ef-e398-48d7-9de9-e0465b359c26",
+      "name": "Emerg_message"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \n  \"reply\": \"Click the link to view and book your appointment: <a href=\\\"https://calendar.google.com/calendar/u/0/r/day\\\" target=\\\"_blank\\\">Book Appointment</a>\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6028,
+        1501
+      ],
+      "id": "17d7a768-a6b6-4faf-ac6a-040c7146859b",
+      "name": "Respond to Appointment",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are PipePal, a friendly virtual assistant for Arizona Plumbing Pros.\nWhen the user asks for services available (CI match of any of): • “services”, “services available”, “what services are available”, “what do you offer”, “service list”, “show me services”, “which services do you provide”\nReply exactly:\n  services: Plumbing, Cooling & Heating, Electrical, Outdoor\n\n",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -6624,
+        1901
+      ],
+      "id": "031ff9d2-2c1d-458e-80b1-5f98e84292d7",
+      "name": "OpenAI3",
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6248,
+        1901
+      ],
+      "id": "d8d8e40d-1a73-4ed0-92dd-a93e1867b91c",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are PipePal, a friendly virtual assistant for Arizona Plumbing Pros.\n\nWhen the user asks for locations (CI match of any of):\n  • “locations available”, “where do you serve”, “service areas”, “where are you located”, “which cities do you cover”, “areas you cover”, “coverage area”\nReply exactly:\n  locations: Tucson, Sahuarita, Green Valley, Vail, Oro Valley, Marana\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -6624,
+        2101
+      ],
+      "id": "2d3a3d6c-6cb4-4700-9c97-fe1a59700b90",
+      "name": "OpenAI4",
+      "credentials": {
+        "openAiApi": {
+          "id": "5ooPzDBVHxRUK0Bx",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6248,
+        2101
+      ],
+      "id": "87804fc2-4466-471b-8787-27822c305868",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e65e1aff-abcb-45b9-ae7c-942753240c84",
+              "name": "technicianMessage",
+              "value": "={{ $json.technicianMessage }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6028,
+        1176
+      ],
+      "id": "45e406c4-3bcd-45a9-8728-9dad89cddb43",
+      "name": "Edit temporary"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.urgency }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    },
+                    "id": "ef1bf981-9677-4354-8b7c-5ac0901df4e7"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9abab734-9ccc-4610-8b4d-b9ae04cfc934",
+                    "leftValue": "={{ $json.urgency }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -7360,
+        700
+      ],
+      "id": "6862df92-16c3-486c-a260-6721b7301848",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6840,
+        620
+      ],
+      "id": "a79c8ecd-2ae2-4ee5-8ea9-3ee105c976d2",
+      "name": "Respond_emergency"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function node: Build Non-Emergency Reply (single-line)\nconst item = items[0].json;\n\nconst replyHtml = `<strong>🔧 Problem Type:</strong> ${item.problemType}<br>` +\n  '⚠️ This isn’t very urgent. You can request a quote by clicking ' +\n  '<button onclick=\"' +\n    \"document.getElementById('pipepal-user-input').value='price'; \" +\n    \"document.getElementById('pipepal-send').click();\" +\n  '\" style=\"background:#004080;color:white;padding:6px 12px;border:none;border-radius:4px;cursor:pointer;\">' +\n    'Get Quote' +\n  '</button>';\n\nreturn [{\n  json: {\n    ...item,\n    isEmergency: false,\n    reply: replyHtml\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7060,
+        820
+      ],
+      "id": "f62a8271-10ef-4479-9f95-50fc82b73fdf",
+      "name": "non emerg"
+    },
+    {
+      "parameters": {
+        "jsCode": "// items is an array; we'll only handle the first one\nconst item = items[0].json;\n\n// build the HTML reply\nconst replyHtml = `<strong>🔧 Problem Type:</strong> ${item.problemType}<br>` +\n  `<strong>🔺 Urgency Level:</strong> ${item.urgency}<br>` +\n  `<strong>🛠 Repair Type:</strong> ${item.repairType}<br>` +\n  `<strong>👷 Specialist:</strong> ${item.specialist}<br><br>` +\n  `${item.Message}<br><br>` +\n  `<button onclick=\"window.location.href='tel:5203332121'\" ` +\n    `style=\"background:#e74c3c;color:#fff;padding:8px 12px;border:none;` +\n    `border-radius:4px;cursor:pointer;\">🚨 Call Emergency Support</button>`;\n\n// overwrite json on this item\nreturn [\n  {\n    json: {\n      problemType: item.problemType,\n      urgency:     item.urgency,\n      repairType:  item.repairType,\n      specialist:  item.specialist,\n      isEmergency: item.isEmergency,\n      reply:       replyHtml.trim(),\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7060,
+        620
+      ],
+      "id": "353638ab-984a-4336-940f-192278eba7ca",
+      "name": "Urgency"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -6840,
+        820
+      ],
+      "id": "adcfdae5-2143-4153-8009-a4d3727b6a5b",
+      "name": "Respond non-emergency"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pricing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI_switch1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook_switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pricing": {
+      "main": [
+        [
+          {
+            "node": "Price & Lookup",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Lookup Customer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "fulfilset",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Tier Infor": {
+      "main": [
+        [
+          {
+            "node": "Merge_Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Tier": {
+      "main": [
+        [
+          {
+            "node": "Setup_set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pricingquotes": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup_Set": {
+      "main": [
+        [
+          {
+            "node": "Merge Tier Infor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup_set": {
+      "main": [
+        [
+          {
+            "node": "Merge Tier Infor",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge_Set": {
+      "main": [
+        [
+          {
+            "node": "Pricingquotes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Customer1": {
+      "main": [
+        [
+          {
+            "node": "Price & Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Lookup_Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Price & Lookup": {
+      "main": [
+        [
+          {
+            "node": "Lookup_customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup_customer": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Tier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Pricing code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pricing code": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fulfillment": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fulfilset": {
+      "main": [
+        [
+          {
+            "node": "Fast Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "fulfillment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI2": {
+      "main": [
+        [
+          {
+            "node": "Message_if",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "plumb": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "plumb",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Emergency function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AppointmentCLeanup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI_switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Appointment": {
+      "main": [
+        [
+          {
+            "node": "Respond to Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AppointmentCLeanup": {
+      "main": [
+        [
+          {
+            "node": "Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emergency function": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit temporary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Emergency response",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Image JSON parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image JSON parse": {
+      "main": [
+        [
+          {
+            "node": "Image if",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image if": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Image Responsecfalse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "OpenAI2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message_if": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Openai_Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio1": {
+      "main": [
+        [
+          {
+            "node": "Twilio2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emergency response": {
+      "main": [
+        [
+          {
+            "node": "Emerg_message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emerg_message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Emergency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit temporary": {
+      "main": [
+        [
+          {
+            "node": "Emergency response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Urgency",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "non emerg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgency": {
+      "main": [
+        [
+          {
+            "node": "Respond_emergency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "non emerg": {
+      "main": [
+        [
+          {
+            "node": "Respond non-emergency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b22a65d-203a-4a65-aab0-92b1d5295f13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c095dcf7cddb4239e44d8e388e62e5b151a1b357759a99b34acdfbd983b4b111"
+  },
+  "id": "mRQYGK750vtYFPMz",
+  "tags": []
+}

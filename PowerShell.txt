@@ -1,0 +1,12 @@
+PowerShell 7.5.1
+PS C:\Users\pc> cd C:\Users\pc\OneDrive\Documents\Testplumbing
+
+PS C:\Users\pc\OneDrive\Documents\Testplumbing>  @"
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+"@ | Out-File -Encoding ascii Dockerfile
+
+
+PS C:\Users\pc\OneDrive\Documents\Testplumbing> docker build --no-cache -t my-website .
+
+PS C:\Users\pc\OneDrive\Documents\Testplumbing> docker run -d -p 8080:80 --name website-container my-website

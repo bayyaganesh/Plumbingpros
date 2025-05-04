@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heating & Cooling | Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+    header, footer { background-color: #002855; color: white; text-align: center; padding: 15px; }
+    nav { background-color: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { padding: 15px 20px; color: white; text-decoration: none; }
+    nav a:hover { background-color: #0066cc; }
+
+    .banner { background-color: #004080; color: white; padding: 40px 20px; text-align: center; }
+    .banner h1 { margin-bottom: 8px; font-size: 32px; }
+    .banner p  { font-size: 16px; }
+
+    /* AI Assistant Buttons */
+    .ai-assistant { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+    .ai-btn {
+      background: #002855; color: #fff; border: none; padding: 12px 20px;
+      border-radius: 50px; cursor: pointer; display: flex; align-items: center;
+      gap: 8px; transition: all 0.3s;
+    }
+    .ai-btn:hover { background: #0066cc; transform: scale(1.05); }
+
+    /* Emergency Section */
+    .emergency-section { padding: 20px; text-align: center; border-bottom: 1px solid #ddd; background: #f8f9fa; }
+    .emergency-section h2 { color: #004080; margin-bottom: 6px; }
+    .emergency-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 12px; }
+    .emergency-btn {
+      display: flex; align-items: center; gap: 8px; padding: 15px 25px;
+      color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .emergency-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+    .emergency-btn.plumbing   { background: #e74c3c; }
+    .emergency-btn.electrical { background: #f39c12; }
+    .emergency-btn.heating    { background: #3498db; }
+
+    /* Services Grid */
+    .services-grid {
+    display: grid;
+     /* CHANGE THIS: */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 40px 20px;
+    background-color: white;
+    justify-items: center;
+  }
+    .service-card {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      max-width: 280px;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .service-card:hover { transform: translateY(-5px); }
+    .service-card img { width: 60px; height: 60px; margin-bottom: 12px; }
+    .service-card h3 { font-size: 20px; margin: 15px 0 10px; color:#004080; }
+    .service-card p  { font-size: 14px; color: #555; }
+    .service-card a  {
+      display: inline-block; margin-top: 10px; padding: 8px 16px;
+      background-color: #004080; color: white; text-decoration: none; border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .service-card a:hover { background: #0066cc; }
+
+    /* Quote CTA */
+    .quote-cta { text-align: center; margin: 40px 0; }
+    .quote-cta a {
+      padding: 14px 28px;
+      background: #ff4d4d;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .quote-cta a:hover { background: #e04343; }
+
+    /* Chatbot container */
+    #pipepal-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+
+    /* Footer */
+    footer { background:#002855;color:#ccc;padding:40px 20px; }
+    .footer-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;
+    }
+    .footer-section h4 { color:#fff;margin-bottom:12px; }
+    .footer-section a { color:#ccc;text-decoration:none;display:block;margin-bottom:5px; }
+    .footer-section a:hover { color:#fff; }
+    .social-icons img { height:30px;margin:5px;transition:transform .3s; }
+    .social-icons img:hover { transform:scale(1.1); }
+    .footer-bottom { text-align:center;color:#aaa;font-size:14px;margin-top:40px;
+                     border-top:1px solid #444;padding-top:20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    ⭐ 4.8 Star Rated | Call (520) 333-2121 | Expert HVAC Services in Tucson
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <div class="banner">
+    <h1>Electrical Services</h1>
+    <p>From repairs to upgrades — we keep your power on and your home safe.</p>
+
+    <div class="ai-assistant">
+      <button class="ai-btn" id="ai-voice-btn">🎤 Voice Help</button>
+      <button class="ai-btn" onclick="openPhotoDiagnosis()">📷 Photo Diagnosis</button>
+    </div>
+  </div>
+
+  <section class="emergency-section">
+    <h2>24/7 Emergency Services</h2>
+    <p>Immediate assistance for urgent HVAC issues</p>
+    <div class="emergency-buttons">
+      <a href="tel:5203332121" class="emergency-btn heating"><span>🔥</span> HVAC Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn electrical"><span>⚡</span> Electrical Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn plumbing"><span>🚰</span> Plumbing Emergency</a>
+    </div>
+  </section>
+  <section class="services-grid">
+    <div class="service-card">
+      <img src="electrician.jfif" alt="Residential Electrician">
+      <h3>Residential Electrician</h3>
+      <p>Wiring, troubleshooting, outlets, and panel upgrades for your home.</p>
+      <a href="Residential.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="electric-panels.png" alt="Electric Panels">
+      <h3>Electric Panels</h3>
+      <p>Fuse box replacements, breaker repairs, and panel upgrades.</p>
+      <a href="electric-panels.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="ev charger.jfif" alt="EV Chargers">
+      <h3>EV Charger Installation</h3>
+      <p>Home charging stations for Tesla, Ford, and more — Level 2 certified.</p>
+      <a href="ev-chargers.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="lightings.jfif" alt="Lighting">
+      <h3>Indoor & Outdoor Lighting</h3>
+      <p>Install, repair, or upgrade lighting systems — from LED to landscape.</p>
+      <a href="Lighting.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Generators.jfif" alt="Generators">
+      <h3>Backup Generators</h3>
+      <p>Generator installation and maintenance to keep you powered during outages.</p>
+      <a href="Generators.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="commercial-electrical.jfif" alt="Commercial Electrical">
+      <h3>Commercial Electrical</h3>
+      <p>Power, lighting, and data cabling for offices, retail, and industrial sites.</p>
+      <a href="commercial-electrician.html">Learn More</a>
+    </div>
+  </section>
+  <div class="quote-cta">
+    <a href="Quote Form.html">📋 Request a Free Quote</a>
+  </div>
+
+  <!-- Chatbot Loader (unchanged) -->
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+
+        const css = document.createElement("link");
+        css.rel  = "stylesheet";
+        css.href = "pipepal.css";
+        document.head.appendChild(css);
+
+        const script = document.createElement("script");
+        script.src = "pipepal.js";
+        script.onload = () => initPipepal();
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('ai-voice-btn')?.addEventListener('click', () => {
+        if (!('webkitSpeechRecognition' in window)) {
+          return alert("Voice commands require Chrome or Edge");
+        }
+        document.getElementById('pipepal-chat')?.classList.remove('pipepal-hidden');
+        const rec = new webkitSpeechRecognition();
+        rec.lang = 'en-US'; rec.start();
+        document.getElementById('pipepal-body')
+          .insertAdjacentHTML('beforeend',
+            `<div class="pipepal-msg pipepal-bot">
+               Listening... Please describe your HVAC issue
+             </div>`);
+        rec.onresult = e => {
+          document.getElementById('pipepal-user-input').value = e.results[0][0].transcript;
+          document.getElementById('pipepal-send').click();
+        };
+      });
+    });
+  </script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>CONTACT US</h4>
+                <p>5141 N Casa Grande Hwy<br>Tucson, AZ 85743</p>
+                <p>📞 520.333.2121</p>
+                <p>ROC #113429<br>ROC #113428<br>ROC #117826<br>ROC #117825<br>ROC #154634</p>
+      </div>
+      <div class="footer-section">
+        <h4>OUR SERVICES</h4>
+        <a href="plumbing.html">Plumbing</a>
+        <a href="Heating & Cooling.html">Heating & Cooling</a>
+        <a href="Electrical.html">Electrical</a>
+        <a href="Repipe.html">Repipe</a>
+        <a href="Water Heater.html">Water Heaters</a>
+      </div>
+      <div class="footer-section">
+        <h4>QUICK LINKS</h4>
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About Us</a>
+        <a href="Quote Form.html">Free Quotes</a>
+        <a href="#">Careers</a>
+        <a href="#">Customer Survey</a>
+      </div>
+      <div class="footer-section">
+        <h4>AWARDS</h4>
+        <img src="BBB.png" alt="BBB Accredited" style="height:40px;"/>
+        <img src="carier.jfif" alt="Carrier Partner" style="height:40px;"/>
+        <p>BBB Rating: A+</p>
+        <div class="social-icons">
+          <img src="facebook.png" alt="Facebook"/>
+          <img src="youtube.png" alt="YouTube"/>
+          <img src="instagram.jfif" alt="Instagram"/>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 Arizona Plumbing Pros. All rights reserved.</div>
+  </footer>
+</body>
+</html>

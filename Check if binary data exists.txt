@@ -1,0 +1,105 @@
+// Check if binary data exists
+if (!$binary.data) {
+  throw new Error('No image data found. Please check the input.');
+}
+
+// Validate file type (e.g., jpg, png, jpeg, webp)
+const allowed = ['jpg', 'png', 'jpeg', 'webp'];
+const extension = $binary.fileExtension ? $binary.fileExtension.toLowerCase() : '';
+
+if (!allowed.includes(extension)) {
+  throw new Error(`Unsupported file type. Allowed formats: ${allowed.join(', ')}`);
+}
+
+// Convert binary data to base64
+const imageBase64 = $binary.data.toString('base64');
+
+// Return the base64 image
+return {
+  json: {
+    imageBase64: imageBase64
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 1. Validate binary data exists (use $input instead of input)
+if (!$input.binary || !$input.binary.data) {
+  throw new Error('No file was uploaded. Please attach an image.');
+}
+
+// 2. Get file extension safely
+let fileExtension = '';
+try {
+  // n8n stores binary data in $input.binary
+  fileExtension = $input.binary.fileExtension?.toLowerCase() || 
+                 $input.binary.fileName?.split('.').pop()?.toLowerCase() || 
+                 '';
+} catch (e) {
+  throw new Error('Could not determine file type: ' + e.message);
+}
+
+// 3. Validate file type
+const allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
+if (!allowedFormats.includes(fileExtension)) {
+  throw new Error(`Unsupported file type (${fileExtension}). Please use: ${allowedFormats.join(', ')}`);
+}
+
+// 4. Convert to base64
+const imageBase64 = $input.binary.data.toString('base64');
+
+// 5. Prepare output
+const result = {
+  json: {
+    // Preserve any existing JSON data
+    ...($input.json || {}), 
+    // Add image data
+    image: `data:image/${fileExtension};base64,${imageBase64}`,
+    meta: {
+      size: $input.binary.data.length,
+      type: fileExtension,
+      fileName: $input.binary.fileName || 'uploaded_file'
+    }
+  }
+};
+
+// For debugging - view in n8n execution log
+console.log('Processed image metadata:', JSON.stringify(result.json.meta, null, 2));
+
+return result;
+
+
+
+
+problemType": 
+"Corroded AC unit",
+"urgency": 
+3,
+"repairType": 
+"Full Replacement",
+"specialist": 
+"HVAC Technician",
+"isEmergency": 
+false,
+"Message": 

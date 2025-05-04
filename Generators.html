@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backup Generators | Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+    header, footer { background-color: #002855; color: white; text-align: center; padding: 15px; }
+    nav { background-color: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; padding: 15px 20px; }
+    nav a:hover { background-color: #0066cc; }
+    .banner { background-color: #004080; color: white; padding: 50px 20px; text-align: center; }
+    .content { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    h2 { color: #004080; }
+    .cta { margin-top: 30px; text-align: center; }
+    .cta a { padding: 10px 20px; background-color: #004080; color: white; text-decoration: none; border-radius: 4px; }
+    .cta a:hover { background-color: #0066cc; }
+  </style>
+</head>
+<body>
+  <header>
+    ⚡ Backup Power Solutions | Call (520) 333-2121 | Arizona Plumbing Pros
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <div class="banner">
+    <h1>Backup Generator Installation</h1>
+    <p>Stay powered through any outage with whole-home or portable generators.</p>
+  </div>
+
+  <div class="content">
+    <h2>Generator Services in Tucson</h2>
+    <p>
+      Power outages can be costly and disruptive. Our electricians install backup generators tailored to your home’s size and energy needs — for peace of mind during storms or blackouts.
+    </p>
+
+    <h2>Services Include:</h2>
+    <ul>
+      <li>Home standby generator installation</li>
+      <li>Portable generator transfer switches</li>
+      <li>Wiring, permits, and inspections</li>
+      <li>Fuel source setup (gas/propane)</li>
+      <li>Maintenance and safety checks</li>
+    </ul>
+
+    <h2>Why Choose Arizona Plumbing Pros?</h2>
+    <ul>
+      <li>Licensed generator installers</li>
+      <li>Whole-home or circuit-selective options</li>
+      <li>Fast turnarounds & affordable pricing</li>
+      <li>Free power needs assessment</li>
+    </ul>
+
+    <div class="cta">
+      <a href="contact.html">Request a Free Quote</a>
+    </div>
+  </div>
+<!-- Embedded Quote Form -->
+<div style="margin-top: 40px;">
+    <iframe src="Quote Form.html" style="width:100%; height:650px; border:none;"></iframe>
+  </div>
+  <footer>
+    &copy; 2025 Arizona Plumbing Pros. All rights reserved.
+  </footer>
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")  // Load the HTML for the chatbot
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+  
+        // Dynamically add the CSS for styling the chatbot
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "pipepal.css"; // Your chatbot CSS file
+        document.head.appendChild(css);
+  
+        // Dynamically add the Pipepal.js for chatbot functionality
+        const script = document.createElement("script");
+        script.src = "pipepal.js"; // Your existing chatbot JS
+        script.onload = () => {
+          console.log("✅ Pipepal JS loaded");
+          initPipepal(); // Initialize the chatbot once Pipepal.js is loaded
+        };
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+</script>
+</body>
+</html>

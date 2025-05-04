@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plumbing Services | Arizona Plumbing Pros</title>
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin:0; padding:0 }
+    body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f8f9fa; }
+
+    /* Header & Nav */
+    header { background:#002855; color:#fff; text-align:center; padding:10px; font-size:14px; }
+    nav { display:flex; flex-wrap:wrap; justify-content:center; background:#004080; }
+    nav a { color:#fff; text-decoration:none; padding:15px 20px; }
+    nav a:hover { background:#0066cc; }
+
+    /* Banner + AI */
+    .banner { background:#004080; color:#fff; text-align:center; padding:40px 20px; }
+    .banner h1 { font-size:32px; margin-bottom:8px; }
+    .banner p { font-size:16px; }
+    .ai-assistant { margin-top:20px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }
+    .ai-btn {
+      background:#002855;color:#fff;border:none;padding:12px 20px;border-radius:50px;
+      cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .3s;
+    }
+    .ai-btn:hover { background:#0066cc;transform:scale(1.05); }
+
+    /* Emergency */
+    .emergency-section { text-align:center;padding:20px;border-bottom:1px solid #ddd; background:#f8f9fa; }
+    .emergency-section h2 { color:#004080; margin-bottom:6px;}
+    .emergency-buttons { display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin-top:12px; }
+    .emergency-btn {
+      display:flex;align-items:center;gap:8px;padding:15px 25px;
+      color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;
+      transition:transform .3s,box-shadow .3s;
+    }
+    .emergency-btn:hover { transform:translateY(-3px); box-shadow:0 6px 12px rgba(0,0,0,.3); }
+    .emergency-btn.plumbing  { background:#e74c3c; }
+    .emergency-btn.electrical{ background:#f39c12; }
+    .emergency-btn.heating   { background:#3498db; }
+
+    /* Services grid */
+    .services-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+      padding:40px 20px;
+      background:#fff;
+    }
+    .service-card {
+      background:#fff;border:1px solid #ddd;border-radius:8px;
+      text-align:center;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1);
+      transition:transform .2s;
+    }
+    .service-card:hover { transform:translateY(-5px); }
+    .service-card img { width:60px;height:60px; margin-bottom:12px; }
+    .service-card h3 { font-size:18px; margin-bottom:8px; color:#004080; }
+    .service-card p  { font-size:14px; color:#555; margin-bottom:12px; }
+    .service-card a  {
+      display:inline-block;padding:8px 16px;background:#004080;color:#fff;
+      text-decoration:none;border-radius:4px;transition:background .2s;
+    }
+    .service-card a:hover { background:#0066cc; }
+
+    /* Quote CTA */
+    .quote-cta { text-align:center; margin:40px 0; }
+    .quote-cta a {
+      padding:14px 28px;background:#ff4d4d;color:#fff;text-decoration:none;
+      border-radius:6px;font-size:16px;font-weight:bold;transition:background .3s;
+    }
+    .quote-cta a:hover { background:#e04343; }
+
+    /* Chatbot container */
+    #pipepal-container { position:fixed; bottom:20px; right:20px; z-index:1000; }
+
+    /* Footer */
+    footer { background:#002855;color:#ccc;padding:40px 20px; }
+    .footer-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;
+    }
+    .footer-section h4 { color:#fff;margin-bottom:12px; }
+    .footer-section a { color:#ccc;text-decoration:none;display:block;margin-bottom:5px; }
+    .footer-section a:hover { color:#fff; }
+    .social-icons img { height:30px;margin:5px;transition:transform .3s; }
+    .social-icons img:hover { transform:scale(1.1); }
+    .footer-bottom { text-align:center;color:#aaa;font-size:14px;margin-top:40px;
+                     border-top:1px solid #444;padding-top:20px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header & Nav -->
+  <header>
+    ⭐ 4.8 Star Rated | Call (520) 333-2121 | 24/7 Emergency Plumbing
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <!-- Banner + AI -->
+  <div class="banner">
+    <h1>Our Plumbing Services</h1>
+    <p>Explore our wide range of plumbing solutions designed for Tucson homes and businesses.</p>
+    <div class="ai-assistant">
+      <button class="ai-btn" id="ai-voice-btn">🎤 Voice Help</button>
+      <button class="ai-btn" onclick="openPhotoDiagnosis()">📷 Photo Diagnosis</button>
+    </div>
+  </div>
+
+  <!-- Emergency -->
+  <section class="emergency-section">
+    <h2>24/7 Emergency Services</h2>
+    <p>Immediate assistance for urgent issues</p>
+    <div class="emergency-buttons">
+      <a href="tel:5203332121" class="emergency-btn plumbing"><span>🚰</span> Plumbing Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn electrical"><span>⚡</span> Electrical Emergency</a>
+      <a href="tel:5203332121" class="emergency-btn heating"><span>🔥</span> HVAC Emergency</a>
+    </div>
+  </section>
+
+  <!-- Full Services Grid -->
+  <div class="services-grid">
+    <div class="service-card">
+      <img src="drain-cleaning.png" alt="Drain Cleaning">
+      <h3>Drain Cleaning</h3>
+      <p>Unclog and clean drains with expert service and equipment.</p>
+      <a href="Drain Cleaning.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Leak-Detection.png" alt="Leak Detection">
+      <h3>Leak Detection</h3>
+      <p>Pinpoint and fix leaks before they cause costly damage.</p>
+      <a href="Leak Detection.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="faucets.jfif" alt="Faucet Repair">
+      <h3>Faucets</h3>
+      <p>Stop drips and restore water flow with our expert faucet service.</p>
+      <a href="Faucets.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="perma liner.jpg" alt="Perma-Liner">
+      <h3>Perma‑Liner</h3>
+      <p>Trenchless relining to fix old or cracked sewer pipes fast.</p>
+      <a href="Perma Liner.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="water-heater.jpg" alt="Water Heaters">
+      <h3>Water Heaters</h3>
+      <p>Installation, repair, and maintenance of all water heater types.</p>
+      <a href="Water Heater.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Toilet-Repair.jfif" alt="Toilet Repair">
+      <h3>Toilet Repair</h3>
+      <p>Fast fixes and replacements for toilets and flush systems.</p>
+      <a href="Toilet Repair.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Drain Replace.jfif" alt="Drain Replacement">
+      <h3>Drain Replacement</h3>
+      <p>We replace damaged or rusted drains to improve system flow.</p>
+      <a href="Drain Replacement.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="repipe.jfif" alt="Repipe">
+      <h3>Repipe</h3>
+      <p>Full or partial repiping solutions to modernize your plumbing.</p>
+      <a href="Repipe.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Garbage-Disposal.jfif" alt="Garbage Disposal">
+      <h3>Garbage Disposal</h3>
+      <p>Quick installations and repairs for any type of garbage disposal.</p>
+      <a href="Garbage Disposal.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="burst-pipes.jfif" alt="Burst Pipes">
+      <h3>Burst Pipes</h3>
+      <p>Emergency pipe repair and water shut‑off solutions.</p>
+      <a href="Burst Pipes.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="Gas Repair.jfif" alt="Gas Line Repair">
+      <h3>Gas Line Repair</h3>
+      <p>Safe gas line inspections and leak repairs by licensed pros.</p>
+      <a href="Gas Line Repair.html">Learn More</a>
+    </div>
+    <div class="service-card">
+      <img src="water softner.jfif" alt="Water Softener">
+      <h3>Water Softener</h3>
+      <p>Install or maintain systems that reduce hard water buildup.</p>
+      <a href="Water Softener.html">Learn More</a>
+    </div>
+  </div>
+
+  <!-- Quote CTA -->
+  <div class="quote-cta">
+    <a href="Quote Form.html">📋 Request a Free Quote</a>
+  </div>
+
+  <!-- PipePal Chatbot Loader -->
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+        const css = document.createElement("link");
+        css.rel = "stylesheet"; css.href = "pipepal.css";
+        document.head.appendChild(css);
+        const s = document.createElement("script");
+        s.src = "pipepal.js"; s.onload = ()=>initPipepal();
+        document.body.appendChild(s);
+      });
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('ai-voice-btn')?.addEventListener('click', ()=> {
+        if (!('webkitSpeechRecognition' in window)) {
+          return alert("Voice commands require Chrome or Edge");
+        }
+        document.getElementById('pipepal-chat')?.classList.remove('pipepal-hidden');
+        const rec = new webkitSpeechRecognition();
+        rec.lang = 'en-US'; rec.start();
+        document.getElementById('pipepal-body')
+          .insertAdjacentHTML('beforeend',
+            `<div class="pipepal-msg pipepal-bot">
+               Listening... Please describe your plumbing issue
+             </div>`);
+        rec.onresult = e => {
+          document.getElementById('pipepal-user-input').value =
+            e.results[0][0].transcript;
+          document.getElementById('pipepal-send').click();
+        };
+      });
+    });
+  </script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>CONTACT US</h4>
+                <p>5141 N Casa Grande Hwy<br>Tucson, AZ 85743</p>
+                <p>📞 520.333.2121</p>
+                <p>ROC #113429<br>ROC #113428<br>ROC #117826<br>ROC #117825<br>ROC #154634</p>
+      </div>
+      <div class="footer-section">
+        <h4>OUR SERVICES</h4>
+        <a href="plumbing.html">Plumbing</a>
+        <a href="Heating & Cooling.html">Heating & Cooling</a>
+        <a href="Electrical.html">Electrical</a>
+        <a href="Repipe.html">Repipe</a>
+        <a href="Water Heater.html">Water Heaters</a>
+      </div>
+      <div class="footer-section">
+        <h4>QUICK LINKS</h4>
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About Us</a>
+        <a href="Quote Form.html">Free Quotes</a>
+        <a href="#">Careers</a>
+        <a href="#">Customer Survey</a>
+      </div>
+      <div class="footer-section">
+        <h4>AWARDS</h4>
+        <img src="BBB.png" alt="BBB Accredited" style="height:40px;"/>
+        <img src="carier.jfif" alt="Carrier Partner" style="height:40px;"/>
+        <p>BBB Rating: A+</p>
+        <div class="social-icons">
+          <img src="facebook.png" alt="Facebook"/>
+          <img src="youtube.png" alt="YouTube"/>
+          <img src="instagram.jfif" alt="Instagram"/>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 Arizona Plumbing Pros. All rights reserved.</div>
+  </footer>
+</body>
+</html>

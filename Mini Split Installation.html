@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Split Installation | Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header, footer { background: #002855; color: white; text-align: center; padding: 15px; }
+    nav { background: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { padding: 15px; color: white; text-decoration: none; }
+    nav a:hover { background: #0066cc; }
+    .banner { background: #004080; color: white; padding: 60px 20px; text-align: center; }
+    .content { padding: 40px 20px; max-width: 900px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .content h2 { color: #004080; }
+    .cta { margin-top: 30px; text-align: center; }
+    .cta a { background: #004080; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    ⭐ 4.8 Star Rated | Call (520) 333-2121 | Ductless HVAC Installation
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+  <section class="banner">
+    <h1>Mini Split Installation</h1>
+    <p>Efficient heating and cooling for individual rooms or home additions.</p>
+  </section>
+  <section class="content">
+    <h2>Why Choose a Mini Split System?</h2>
+    <p>Mini splits offer flexible climate control without ductwork. They're perfect for garages, guest suites, or any room needing year-round comfort.</p>
+
+    <h2>Installation Services Include:</h2>
+    <ul>
+      <li>Indoor + outdoor unit placement and mounting</li>
+      <li>Line set connection and electrical hookup</li>
+      <li>System charge and startup</li>
+      <li>Remote control setup</li>
+    </ul>
+
+    <h2>Benefits of Going Ductless:</h2>
+    <ul>
+      <li>High energy efficiency</li>
+      <li>Zoned comfort control</li>
+      <li>Quiet, sleek, and space-saving</li>
+    </ul>
+
+    <div class="cta">
+      <a href="index.html#quote">Request a Mini Split Quote</a>
+    </div>
+  </section>
+  <!-- Embedded Quote Form -->
+<div style="margin-top: 40px;">
+    <iframe src="Quote Form.html" style="width:100%; height:650px; border:none;"></iframe>
+  </div>
+  <footer>
+    &copy; 2025 Arizona Plumbing Pros. All rights reserved.
+  </footer>
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")  // Load the HTML for the chatbot
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+  
+        // Dynamically add the CSS for styling the chatbot
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "pipepal.css"; // Your chatbot CSS file
+        document.head.appendChild(css);
+  
+        // Dynamically add the Pipepal.js for chatbot functionality
+        const script = document.createElement("script");
+        script.src = "pipepal.js"; // Your existing chatbot JS
+        script.onload = () => {
+          console.log("✅ Pipepal JS loaded");
+          initPipepal(); // Initialize the chatbot once Pipepal.js is loaded
+        };
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+</script>
+</body>
+</html>

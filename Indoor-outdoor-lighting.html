@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Indoor & Outdoor Lighting | Arizona Plumbing Pros</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+    header, footer { background-color: #2c2f3a; color: white; text-align: center; padding: 20px; }
+    nav { background-color: #004080; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { color: white; text-decoration: none; padding: 15px 20px; }
+    nav a:hover { background-color: #0066cc; }
+    .banner { background-color: #004080; color: white; padding: 60px 20px; text-align: center; }
+    .content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    h2 { color: #004080; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding: 40px 20px; background-color: #2c2f3a; color: white; }
+    .footer-section h4 { margin-bottom: 10px; }
+    .footer-section p, .footer-section a { font-size: 14px; color: #ccc; line-height: 1.6; text-decoration: none; }
+    .footer-section a:hover { text-decoration: underline; }
+    .awards img { height: 40px; margin: 10px; }
+    .social-icons img { width: 28px; margin: 5px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    💡 Indoor & Outdoor Lighting Experts | Call (520) 333-2121
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="plumbing.html">Plumbing</a>
+    <a href="Heating & Cooling.html">Heating & Cooling</a>
+    <a href="Electrical.html">Electrical</a>
+    <a href="Commercial.html">Commercial</a>
+    <a href="Service Area.html">Service Area</a>
+    <a href="membership.html">Membership</a>
+    <a href="about-us.html">About Us</a>
+  </nav>
+
+  <div class="banner">
+    <h1>Indoor & Outdoor Lighting Services</h1>
+    <p>Light up your life — inside and out — with pro-grade electrical work in Tucson & beyond.</p>
+  </div>
+
+  <div class="content">
+    <h2>Indoor Lighting Solutions</h2>
+    <ul>
+      <li>Recessed and ambient lighting installation</li>
+      <li>Chandeliers, pendant lights & ceiling fan lighting</li>
+      <li>Under-cabinet & accent lighting</li>
+      <li>Dimmers and smart switch wiring</li>
+    </ul>
+
+    <h2>Outdoor & Landscape Lighting</h2>
+    <ul>
+      <li>Security lighting & motion sensor systems</li>
+      <li>Pathway, patio, and pool lighting</li>
+      <li>LED upgrades and flood lights</li>
+      <li>Weatherproof installation with timer control</li>
+    </ul>
+
+    <h2>Why Homeowners Choose Us</h2>
+    <ul>
+      <li>Licensed, insured, and experienced electricians</li>
+      <li>Custom design plans for both interior & exterior</li>
+      <li>Affordable pricing and quick turnaround</li>
+      <li>Up-to-code, safe, and energy-efficient solutions</li>
+    </ul>
+
+    <p><a href="Quote Form.html">Get a Free Quote for Lighting Installation</a> today!</p>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>CONTACT US</h4>
+        <p>5141 N Casa Grande Hwy<br>Tucson, AZ 85743</p>
+        <p>📞 520.333.2121</p>
+        <p>ROC #113429<br>ROC #113428<br>ROC #117826<br>ROC #117825<br>ROC #154634</p>
+      </div>
+      <div class="footer-section">
+        <h4>OUR SERVICES</h4>
+        <a href="plumbing.html">Plumbing</a><br>
+        <a href="heating-cooling.html">Heating & Cooling</a><br>
+        <a href="electrical.html">Electrical</a><br>
+        <a href="repipe.html">Repipe</a><br>
+        <a href="water-heater.html">Water Heaters</a>
+      </div>
+      <div class="footer-section">
+        <h4>QUICK LINKS</h4>
+        <a href="index.html">Home</a><br>
+        <a href="contact.html">Contact Us</a><br>
+        <a href="about-us.html">About Us</a><br>
+        <a href="Quote Form.html">Free Quotes</a><br>
+        <a href="#">Careers</a><br>
+        <a href="#">Take Our Customer Survey</a>
+      </div>
+      <div class="footer-section awards">
+        <h4>AWARDS</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Carrier_logo.svg/320px-Carrier_logo.svg.png" alt="Carrier">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Better_Business_Bureau_logo.svg/320px-Better_Business_Bureau_logo.svg.png" alt="BBB">
+        <p>BBB Rating: A+</p>
+        <div class="social-icons">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/facebook-new.png" alt="Facebook">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/youtube-play.png" alt="YouTube">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/yelp.png" alt="Yelp">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/share.png" alt="Share">
+        </div>
+      </div>
+    </div>
+    <p style="padding:10px;">&copy; 2025 Arizona Plumbing Pros. All rights reserved.</p>
+  </footer>
+  <div id="pipepal-container"></div>
+  <script>
+    fetch("pipepal.html")  // Load the HTML for the chatbot
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("pipepal-container").innerHTML = html;
+  
+        // Dynamically add the CSS for styling the chatbot
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "pipepal.css"; // Your chatbot CSS file
+        document.head.appendChild(css);
+  
+        // Dynamically add the Pipepal.js for chatbot functionality
+        const script = document.createElement("script");
+        script.src = "pipepal.js"; // Your existing chatbot JS
+        script.onload = () => {
+          console.log("✅ Pipepal JS loaded");
+          initPipepal(); // Initialize the chatbot once Pipepal.js is loaded
+        };
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("❌ Pipepal load failed:", err));
+</script>
+</body>
+</html>
