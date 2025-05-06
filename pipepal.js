@@ -179,7 +179,7 @@ function initPipepal() {
       if (file) formData.append('imageFile', file);
       formData.append('context', JSON.stringify(context));
 
-      const res  = await fetch('https://ganeshbabybayya17.app.n8n.cloud/webhook/pipepal-sosy',{
+      const res  = await fetch('https://ganzy88.app.n8n.cloud/webhook/pipepal-sosy',{
         method:'POST', body:formData
       });
       console.log('⬅️ Response status:', res.status);
