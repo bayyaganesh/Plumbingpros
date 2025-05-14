@@ -1,239 +1,300 @@
 /**
- * pipepal.js
- * Integrated chat upload, quick replies, emergency handling,
- * updated reply extraction, plus page‑to‑page persistence.
+ * pipepal.js (with Contact Capture, Tech Forwarding & Appointment Flow)
  */
 
 function initPipepal() {
   console.log("✅ Pipepal JS Loaded");
 
-  // SESSION STORAGE KEY & HELPERS
-  const STORAGE_KEY = 'pipepal_chat_history';
-  // clear on full reload
-  const nav = performance.getEntriesByType('navigation')[0] || {};
-  if (nav.type === 'reload') sessionStorage.removeItem(STORAGE_KEY);
+  // ── CONFIG
+  const WEBHOOK_URL  = 'https://ganzy88.app.n8n.cloud/webhook/pipepal-sosy';
+  const TECH_WEBHOOK = 'https://ganzy88.app.n8n.cloud/webhook/receive-ticket';
+  const APPT_WEBHOOK = 'https://ganzy88.app.n8n.cloud/webhook/log-lead';
+  const STORAGE_KEY  = 'pipepal_chat_history';
+  const USER_KEY     = 'pipepal_user_data';
+  let voiceEnabled   = true;
+  let context        = {};
 
+  // ── Persistence Helpers
   function saveHistory(entries) {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   }
   function loadHistory() {
-    try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
     catch { return []; }
   }
-  function renderHistory(body) {
-    const hist = loadHistory();
-    hist.forEach(({ role, html }) => {
-      const msg = document.createElement('div');
-      msg.className = 'pipepal-msg pipepal-' + role;
-      msg.innerHTML = html;
-      body.appendChild(msg);
-    });
+  function saveUserData() {
+    localStorage.setItem(USER_KEY, JSON.stringify({
+      name:    context.Name || 'Unknown',
+      phone:   context.Phone || 'N/A',
+      address: context.Address || 'N/A',
+      lastIntent: context.IntentName || ''
+    }));
+  }
+  function loadUserData() {
+    try { return JSON.parse(localStorage.getItem(USER_KEY)) || {}; }
+    catch { return {}; }
   }
 
-  // Core Elements
-  const toggle = document.getElementById('pipepal-toggle');
-  const chat   = document.getElementById('pipepal-chat');
-  const close  = document.getElementById('pipepal-close');
-  const send   = document.getElementById('pipepal-send');
-  const input  = document.getElementById('pipepal-user-input');
-  const body   = document.getElementById('pipepal-body');
-  const typing = document.getElementById('pipepal-typing');
+  // ── UI Helpers
+  function persistMessage(role, html) {
+    const h = loadHistory(); h.push({ role, html }); saveHistory(h);
+  }
+  function showBotMessage(text, isHTML = false) {
+    const m = document.createElement('div');
+    m.className = 'pipepal-msg pipepal-bot';
+    isHTML ? m.innerHTML = text : m.textContent = text;
+    body.appendChild(m);
+    persistMessage('bot', isHTML ? text : m.textContent);
+    speakText(text);
+    body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+    m.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 
-  // Context Tracking
-  let context = {
-    IntentName: null,
-    RequestedService: null,
-    Name: null,
-    Email: null,
-    CustomerID: null
+  // ── Greeting
+  function greetUser() {
+    const u = loadUserData();
+    if (u.name) showBotMessage(`Welcome back, ${u.name}! How can I help today?`);
+    else         showBotMessage("Hi there! I’m PipePal. How can I help today?");
+  }
+
+  // ── TTS
+  function speakText(raw) {
+    if (!voiceEnabled || !('speechSynthesis' in window)) return;
+    const plain = raw.replace(/<[^>]+>/g, '');
+    const clean = plain.replace(/[\u{1F300}-\u{1F6FF}]/gu, '');
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = 'en-US'; speechSynthesis.speak(u);
+  }
+
+  // ── Core Elements
+  const toggle    = document.getElementById('pipepal-toggle');
+  const chat      = document.getElementById('pipepal-chat');
+  const closeBtn  = document.getElementById('pipepal-close');
+  const sendBtn   = document.getElementById('pipepal-send');
+  const input     = document.getElementById('pipepal-user-input');
+  const body      = document.getElementById('pipepal-body');
+  const typing    = document.getElementById('pipepal-typing');
+  const header    = document.getElementById('pipepal-header');
+  let voiceToggle = document.getElementById('pipepal-voice-toggle');
+
+  // Create voice toggle if missing
+  if (header && !voiceToggle) {
+    voiceToggle = document.createElement('button');
+    voiceToggle.id          = 'pipepal-voice-toggle';
+    voiceToggle.title       = 'Toggle Voice';
+    voiceToggle.textContent = '🔊';
+    header.appendChild(voiceToggle);
+  }
+
+  if (![toggle, chat, closeBtn, sendBtn, input, body, typing, voiceToggle].every(el => el)) {
+    console.warn('❌ Missing elements'); return;
+  }
+
+  // ── Voice Toggle
+  voiceToggle.addEventListener('click', () => {
+    voiceEnabled = !voiceEnabled;
+    if (!voiceEnabled) speechSynthesis.cancel();
+    voiceToggle.textContent = voiceEnabled ? '🔊' : '🔇';
+  });
+
+  // ── Quick Replies
+  const quickMap = {
+    'Book Appointment':    'schedule_appointment',
+    'Get Quote':           'price',
+    'Live Agent':          'connect_human',
+    'Plumbing Emergency':  '🚨 EMERGENCY: Burst pipe/flooding',
+    'Electrical Emergency':'🚨 EMERGENCY: Sparks/power outage',
+    'Heating Emergency':   '🚨 EMERGENCY: No heating/cooling'
   };
+  document.querySelectorAll('.pipepal-quick-buttons button').forEach(btn =>
+    btn.addEventListener('click', () => {
+      input.value = quickMap[btn.textContent.trim()] || btn.textContent.trim();
+      sendBtn.click();
+    })
+  );
 
-  // Validate
-  if (!toggle||!chat||!close||!send||!input||!body||!typing) {
-    console.warn("❌ Pipepal elements not found.");
-    return;
-  }
-
-  // Render previous session’s chat
-  renderHistory(body);
-
-  // File input shim
+  // ── Photo Upload Shim
   const fileInput = document.createElement('input');
   fileInput.type    = 'file';
-  fileInput.id      = 'pipepal-file-upload';
   fileInput.accept  = 'image/*,.pdf';
-  fileInput.capture = 'environment';      // hint mobile to open camera
+  fileInput.id      = 'pipepal-file-upload';
   fileInput.style.display = 'none';
   document.body.appendChild(fileInput);
-
-  // Expose for photo button
   window.openPhotoDiagnosis = () => {
     if (chat.classList.contains('pipepal-hidden')) chat.classList.remove('pipepal-hidden');
     fileInput.click();
   };
+  fileInput.addEventListener('change', () => { if (fileInput.files.length) processUserInput(); });
 
-  // UI event wiring
-  toggle.addEventListener('click', () => chat.classList.toggle('pipepal-hidden'));
-  close .addEventListener('click', () => chat.classList.add('pipepal-hidden'));
-  input .addEventListener('keypress', e => e.key==='Enter' && send.click());
-  send  .addEventListener('click', processUserInput);
-  fileInput.addEventListener('change', handleFileUpload);
-
-  // Quick replies map
-  const quickMap = {
-    'Get Quote': 'price',
-    'Book Appointment': 'schedule_appointment',
-    'Live Agent': 'connect_human',
-    'Plumbing Emergency': '🚨 EMERGENCY: Burst pipe/flooding',
-    'Electrical Emergency': '🚨 EMERGENCY: Sparks/power outage',
-    'Heating Emergency': '🚨 EMERGENCY: No heating/cooling'
-  };
-  document.querySelectorAll('.pipepal-quick-buttons button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.textContent.trim();
-      // direct dial on emergency buttons
-      if (key.includes('Emergency')) {
-        window.location.href = 'tel:5203332121';
-      } else {
-        input.value = quickMap[key] || key;
-        send.click();
+  // ── Predictive FAQs
+  const suggestionsContainer = document.getElementById('autocomplete-suggestions');
+  let debounceTimer = null;
+  input.addEventListener('input', e => {
+    clearTimeout(debounceTimer);
+    const q = e.target.value.trim();
+    if (q.length < 2) { suggestionsContainer.innerHTML = ''; return; }
+    debounceTimer = setTimeout(async () => {
+      try {
+        const res = await fetch('/.netlify/functions/autocomplete', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: q })
+        });
+        const { suggestions } = await res.json();
+        renderSuggestions(suggestions);
+      } catch {
+        suggestionsContainer.innerHTML = '';
       }
+    }, 300);
+  });
+  function renderSuggestions(list) {
+    suggestionsContainer.innerHTML = '';
+    list.forEach(item => {
+      const div = document.createElement('div');
+      div.textContent = item;
+      div.className   = 'autocomplete-item';
+      div.onclick     = () => { input.value = item; suggestionsContainer.innerHTML = ''; sendBtn.click(); };
+      suggestionsContainer.appendChild(div);
     });
+  }
+  document.addEventListener('click', e => {
+    if (!document.getElementById('pipepal-input-container').contains(e.target)) {
+      suggestionsContainer.innerHTML = '';
+    }
   });
 
-  // Helpers to persist each message
-  function persistMessage(role, html) {
-    const hist = loadHistory();
-    hist.push({ role, html });
-    saveHistory(hist);
-  }
+  // ── UI Events
+  toggle.addEventListener('click', () => chat.classList.toggle('pipepal-hidden'));
+  closeBtn.addEventListener('click', () => chat.classList.add('pipepal-hidden'));
+  input.addEventListener('keypress', e => e.key==='Enter' && sendBtn.click());
+  sendBtn.addEventListener('click', processUserInput);
 
-  // Show bot reply (and save to sessionStorage)
-  function showBotMessage(text, isHTML = false) {
-    const msg = document.createElement('div');
-    msg.className = 'pipepal-msg pipepal-bot';
-    if (isHTML) msg.innerHTML = text;
-    else        msg.textContent = text;
-    body.appendChild(msg);
-    persistMessage('bot', isHTML ? text : msg.textContent);
-  }
+  // ── Initial Render
+  const userData = loadUserData();
+  context.Name    = userData.name || '';
+  context.Phone   = userData.phone|| '';
+  context.Address = userData.address|| '';
+  renderHistory(body);
+  greetUser();
 
-  // Handle file select
-  function handleFileUpload() {
-    if (!fileInput.files.length) return;
-    const file = fileInput.files[0];
-    if (file.size > 5*1024*1024) {
-      showBotMessage("⚠️ Please upload images under 5MB", true);
-      return;
-    }
-    processUserInput();
-  }
-
-  // Main send logic
-  async function processUserInput() {
-    const raw = input.value.trim();
-    const file = fileInput.files[0];
-
-    // emergency typed shortcut
-    const lower = raw.toLowerCase();
-    if (lower.includes('emergency') || raw.startsWith('🚨')) {
-      await sendToBackend(raw, file);
-      showBotMessage('⚠️ Connecting you to emergency support…', true);
-      window.location.href = 'tel:5203332121';
-      input.value=''; fileInput.value='';
-      return;
-    }
-
-    if (!raw && !file) return;
-
-    // Render user msg
-    const userMsg = document.createElement('div');
-    userMsg.className = 'pipepal-msg pipepal-user';
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        userMsg.innerHTML = `<img src="${e.target.result}" style="max-width:100%;border-radius:8px;"><br>${raw||''}`;
-        body.appendChild(userMsg);
-        persistMessage('user', userMsg.innerHTML);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      userMsg.textContent = raw;
-      body.appendChild(userMsg);
-      persistMessage('user', raw);
-    }
-
-    // Kick off fetch
-    typing.style.display = 'block';
-    await sendToBackend(raw, file);
-
-    input.value=''; fileInput.value='';
-  }
-
-  // Backend fetch + display
-  async function sendToBackend(msg, file) {
+  // ── Send Appointment Request
+  async function sendAppointmentRequest() {
+    const apptFD = new FormData();
+    apptFD.append('Name',             context.Name);
+    apptFD.append('Email',            context.Email);
+    apptFD.append('Phone',            context.Phone);
+    apptFD.append('RequestedService', 'Appointment');
+    apptFD.append('PreferredDate',    context.AppointmentDate);
+    if (fileInput.files[0]) apptFD.append('imageFile', fileInput.files[0]);
     try {
-      console.log('🚀 Sending to n8n…', {msg, file});
-      const formData = new FormData();
-      if (msg)  formData.append('message', msg);
-      if (file) formData.append('imageFile', file);
-      formData.append('context', JSON.stringify(context));
-
-      const res  = await fetch('https://ganzy88.app.n8n.cloud/webhook/pipepal-sosy',{
-        method:'POST', body:formData
-      });
-      console.log('⬅️ Response status:', res.status);
-
-      const text = await res.text();
-      console.log('⬅️ Raw response text:', text);
-
-      let data = {};
-      if (text) {
-        try { data = JSON.parse(text); }
-        catch {/* non-JSON fallback */}
-      }
-
-      // unwrap single-array
-      if (Array.isArray(data) && data.length) data = data[0];
-
-      console.log('⬅️ Parsed:', data);
-      updateContext(data);
-
-      // pick reply
-      const replyText =
-        data.reply ||
-        data['Image Analysis'] ||
-        data.customerMessage ||
-        data.result ||
-        data.message?.content?.response ||
-        data.message?.content ||
-        (data.choices?.[0]?.message?.content?.response ||
-         data.choices?.[0]?.message?.content) ||
-        '';
-
-      if (replyText) {
-        const isHTML = /<[^>]+>/.test(replyText);
-        showBotMessage(replyText, isHTML);
-      } else {
-        showBotMessage('Sorry, something went wrong.', false);
-      }
-    }
-    catch(err) {
-      console.error('❌ sendToBackend error:', err);
-      showBotMessage('🚨 System Error. Call (520) 333-2121.', true);
-    }
-    finally {
-      typing.style.display = 'none';
-      body.scrollTo({top:body.scrollHeight,behavior:'smooth'});
+      const r = await fetch(APPT_WEBHOOK, { method: 'POST', body: apptFD });
+      if (r.ok) showBotMessage(`✅ Thanks ${context.Name}! Your appointment for ${context.AppointmentDate} is booked.`, false);
+      else     showBotMessage('⚠️ Could not book appointment. Please try again.', false);
+    } catch {
+      showBotMessage('⚠️ Network error booking appointment.', false);
     }
   }
 
-  // keep track of context fields
-  function updateContext(data) {
-    ['IntentName','RequestedService','Name','Email','CustomerID']
-      .forEach(key => (data[key] && (context[key]=data[key])));
+  // ── Main Logic
+  async function processUserInput() {
+    const msg = input.value.trim();
+    input.value = '';
+    suggestionsContainer.innerHTML = '';
+    const file = fileInput.files[0];
+    if (!msg && !file) return;
+
+    // Render user bubble
+    const u = document.createElement('div'); u.className = 'pipepal-msg pipepal-user';
+    if (file) {
+      const r = new FileReader();
+      r.onload = e => {
+        u.innerHTML = `<img src="${e.target.result}" style="max-width:100%;border-radius:8px;"><br>${msg||''}`;
+        body.appendChild(u);
+        u.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        persistMessage('user', u.innerHTML);
+      };
+      r.readAsDataURL(file);
+    } else {
+      u.textContent = msg;
+      body.appendChild(u);
+      u.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      persistMessage('user', msg);
+    }
+
+    // Send to main webhook
+    let data = {};
+    try {
+      const fd = new FormData();
+      if (msg) fd.append('message', msg);
+      if (file) fd.append('imageFile', file);
+      fd.append('context', JSON.stringify(context));
+      const res = await fetch(WEBHOOK_URL, { method: 'POST', body: fd });
+      const text = await res.text(); data = text ? JSON.parse(text) : {};
+      if (Array.isArray(data)) data = data[0]||{};
+      if (data.IntentName) context.IntentName = data.IntentName;
+      if (data.Name)       context.Name       = data.Name;
+      saveUserData();
+
+      // Emergency branch
+      if (data.emergencyType) {
+        showBotMessage(`🚨 ${data.emergencyType} Emergency!`, false);
+        showBotMessage(
+          `<a href="tel:5203332121" class="pipepal-emergency-btn">📞 Call ${data.emergencyType} Emergency</a>`,
+          true
+        );
+        // Forward ticket
+        const tf = new FormData();
+        if (file) tf.append('imageFile', file);
+        tf.append('issueType', data.emergencyType);
+        tf.append('notes', msg);
+        tf.append('userName', context.Name);
+        tf.append('userPhone', context.Phone);
+        fetch(TECH_WEBHOOK, { method: 'POST', body: tf });
+        return;
+      }
+
+      // Appointment branch
+      if (data.IntentName === 'Appointment' && !context.AppointmentDate) {
+        showBotMessage(
+          `<div class="pipepal-form">
+            <input id="appt-name"        placeholder="Your full name" />
+            <input id="appt-email"       placeholder="Your email" />
+            <input id="appt-phone"       placeholder="Your phone number" />
+            <input id="appt-date" type="date" />
+            <button id="appt-submit">Book Appointment</button>
+          </div>`,
+          true
+        );
+        document.getElementById('appt-submit').onclick = () => {
+          context.Name            = document.getElementById('appt-name').value.trim()  || 'Unknown';
+          context.Email           = document.getElementById('appt-email').value.trim() || 'N/A';
+          context.Phone           = document.getElementById('appt-phone').value.trim() || 'N/A';
+          context.AppointmentDate = document.getElementById('appt-date').value       || 'N/A';
+          saveUserData();
+          sendAppointmentRequest();
+        };
+        return;
+      }
+
+      // Quote/pricing or other intents fall through:
+      const reply = data.reply || data.customerMessage || '';
+      if (reply) showBotMessage(reply, /<[^>]+>/.test(reply));
+    } catch(err) {
+      console.error(err);
+      showBotMessage(`🚨 Error: ${err.message}`, false);
+    } finally {
+      typing.style.display = 'none';
+      fileInput.value = '';
+    }
+  }
+
+  // ── History Renderer
+  function renderHistory(container) {
+    loadHistory().forEach(({ role, html }) => {
+      const m = document.createElement('div');
+      m.className = `pipepal-msg pipepal-${role}`;
+      m.innerHTML = html;
+      container.appendChild(m);
+    });
   }
 }
-
-// expose
 window.initPipepal = initPipepal;

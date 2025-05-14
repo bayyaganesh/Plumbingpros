@@ -4,29 +4,33 @@
   <div id="pipepal-chat" class="pipepal-hidden">
     <div id="pipepal-header">
       <span>🤖 Pipepal</span>
+      <div id="pipepal-badges"></div>
+      <button id="pipepal-voice-toggle" title="Toggle Voice">🔊</button>
       <button id="pipepal-close">✖</button>
     </div>
 
-    <!-- Chat messages -->
+    <!-- 1) Scrollable message area -->
     <div id="pipepal-body"></div>
 
-    <!-- Quick replies (always visible) -->
-    <div class="pipepal-quick-buttons">
-      <button>Book Appointment</button>
-      <button>Get Quote</button>
-      <button>Live Agent</button>
-      <button class="emergency-btn plumbing">Plumbing Emergency</button>
-      <button class="emergency-btn electrical">Electrical Emergency</button>
-      <button class="emergency-btn heating">Heating Emergency</button>
-    </div>
+    <!-- 2) Static footer: wrap both buttons & input here -->
+    <div class="pipepal-footer">
+      <div class="pipepal-quick-buttons">
+        <button>Book Appointment</button>
+        <button>Get Quote</button>
+        <button>Live Agent</button>
+        <button class="emergency-btn plumbing">Plumbing Emergency</button>
+        <button class="emergency-btn electrical">Electrical Emergency</button>
+        <button class="emergency-btn heating">Heating Emergency</button>
+      </div>
+      <!-- NEW: autocomplete wrapper -->
+      <div id="pipepal-input-container">
+        <input id="pipepal-user-input" type="text" placeholder="Type your message…" autocomplete="off" />
+        <button id="pipepal-send">➤</button>
+        <div id="autocomplete-suggestions" class="autocomplete-list"></div>
+      </div>
+        
 
-    <!-- Typing indicator -->
+    <!-- Typing indicator (can float above footer if you like) -->
     <div id="pipepal-typing">Pipepal is typing...</div>
-
-    <!-- Input bar -->
-    <div id="pipepal-input">
-      <input id="pipepal-user-input" type="text" placeholder="Type your message…" />
-      <button id="pipepal-send">➤</button>
-    </div>
   </div>
 </div>

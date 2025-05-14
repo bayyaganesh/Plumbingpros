@@ -1,83 +1,236 @@
-/* CHAT WIDGET CONTAINER */
-/* pipepal.css */
-
-/* Container & toggle */
-#pipepal-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
-#pipepal-toggle {
-  background: #004080; color: #fff; padding: 12px 20px; border-radius: 24px;
-  cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+/* Widget & Header */
+#pipepal-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: 'Segoe UI', sans-serif;
 }
-#pipepal-toggle:hover { background: #0066cc; }
+#pipepal-toggle,
+#pipepal-voice-toggle {
+  background: #004080;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#pipepal-toggle {
+  padding: 14px;
+  border-radius: 50%;
+  font-size: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+#pipepal-voice-toggle {
+  font-size: 18px;
+  background: transparent;
+  margin-left: 8px;
+}
+#pipepal-toggle:hover { transform: scale(1.1); }
+#pipepal-voice-toggle:hover { color: #ffcc00; }
 
-/* Chat box */
+/* Chat Box */
 #pipepal-chat {
-  position: absolute; bottom: 70px; right: 0;
-  width: 350px; height: 600px; max-height: 90vh;
-  background: #fff; border: 1px solid #ddd; border-radius: 12px;
-  display: flex; flex-direction: column; overflow: hidden;
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  width: 400px;           /* increased for more breathing room */
+  height: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  overflow: hidden;
 }
 .pipepal-hidden { display: none !important; }
 
-/* Header */
+/* Header Layout */
 #pipepal-header {
-  background: #004080; color: #fff; padding: 12px;
-  display: flex; justify-content: space-between; align-items: center;
+  background: #004080;
+  color: white;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+#pipepal-close {
+  margin-left: auto;
+}
+/* hide badge shelf in header */
+#pipepal-badges {
+  display: none !important;
+}
+
+/* Badge Shelf */
+.badge {
+  background: gold;
+  color: #004080;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: bold;
 }
 
-/* Message body */
+/* Message Body */
 #pipepal-body {
-  flex: 1 1 auto; padding: 15px; background: #f8f9fa;
-  overflow-y: auto; scrollbar-width: thin;
+  flex: 1;
+  padding: 15px;
+  background: #f8f9fa;
+  overflow-y: auto;
 }
 
 /* Messages */
 .pipepal-msg {
-  margin-bottom: 12px; padding: 12px; border-radius: 8px;
-  font-size: 14px; line-height: 1.4; max-width: 85%;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  max-width: 85%;
+  line-height: 1.4;
+  font-size: 14px;
 }
 .pipepal-bot {
-  background: #e0ebff; color: #003366; align-self: flex-start;
+  background: #e0ebff;
+  color: #003366;
+  align-self: flex-start;
   border-left: 3px solid #004080;
 }
 .pipepal-user {
-  background: #0066cc; color: #fff; align-self: flex-end;
-  text-align: right; border-right: 3px solid #003366;
+  background: #0066cc;
+  color: white;
+  align-self: flex-end;
+  text-align: right;
+  margin-left: auto;
+  border-right: 3px solid #003366;
 }
 
-/* Quick buttons (pinned above input) */
+/* Footer Layout */
+.pipepal-footer {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  flex-shrink: 0;
+  border-top: 1px solid #ddd;
+}
+
+/* Quick Replies */
 .pipepal-quick-buttons {
-  display: flex; flex-wrap: wrap; gap: 10px;
-  padding: 10px; background: #f8f9fa;
-  position: sticky; bottom: 0; z-index: 10;
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 15px;
+  background: #f8f9fa;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
+  z-index: 10;
 }
 .pipepal-quick-buttons button {
-  flex: 1; min-width: 100px;
-  background: #004080; color: #fff; border: none; padding: 10px;
-  border-radius: 6px; cursor: pointer; transition: background .2s;
+  flex: 1;
+  min-width: 100px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #004080;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.pipepal-quick-buttons button:hover { background: #0066cc; }
+.pipepal-quick-buttons button:hover {
+  background: #0066cc;
+}
+/* Emergency Color Overrides (buttons 4–6) */
+.pipepal-quick-buttons button:nth-child(4) { background: #ff3b30; }
+.pipepal-quick-buttons button:nth-child(5) { background: #f39c12; }
+.pipepal-quick-buttons button:nth-child(6) { background: #3498db; }
 
-/* Emergency‑style quick buttons */
-.emergency-btn.plumbing   { background: #e74c3c; }
-.emergency-btn.electrical { background: #f39c12; }
-.emergency-btn.heating    { background: #3498db; }
-
-/* Typing indicator */
-#pipepal-typing {
-  display: none; padding: 8px 15px; font-style: italic; color: #666;
+/* Input Container */
+#pipepal-input-container {
+  order: 2;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  position: relative;
+  background: white;
 }
 
-/* Input area */
-#pipepal-input {
-  display: flex; border-top: 1px solid #ddd; background: #fff;
-}
+/* Text Input */
 #pipepal-user-input {
-  flex: 1; padding: 12px; border: none; outline: none; font-family: inherit;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-right: 8px;
 }
+
+/* Send Button */
 #pipepal-send {
-  background: #0066cc; color: #fff; border: none; padding: 0 20px;
-  cursor: pointer; transition: background .2s;
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-#pipepal-send:hover { background: #004080; }
+#pipepal-send:hover {
+  background: #004080;
+}
+
+/* Typing Indicator */
+#pipepal-typing {
+  display: none;
+  padding: 8px 15px;
+  font-style: italic;
+  color: #666;
+  font-size: 13px;
+}
+
+/* Emergency Mode */
+.pipepal-emergency-msg {
+  border: 2px solid red !important;
+  box-shadow: 0 0 20px rgba(255,0,0,0.5) !important;
+}
+.pipepal-emergency-btn {
+  display: inline-block;
+  background: red;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.pipepal-emergency-btn:hover {
+  background: darkred;
+}
+
+/* Toast Popup */
+.pipepal-badge-toast {
+  display: none !important;
+}
+
+/* Autocomplete Dropdown */
+.autocomplete-list {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 140px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 20;
+}
+.autocomplete-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.autocomplete-item:hover {
+  background: #f0f0f0;
+}
